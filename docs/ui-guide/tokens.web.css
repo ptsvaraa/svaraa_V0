@@ -1,0 +1,315 @@
+/*
+ * Design tokens. Look and feel follow the Svaraa website (svarra-marketing-henna.vercel.app):
+ * warm cream canvas, plum primary, Newsreader headings, Inter text, soft glass cards.
+ * Token names are unchanged. The previous Brand-document values are kept in docs/design/tokens.brand-doc-v1.css.
+ */
+:root,
+[data-theme='light'] {
+  --bg-canvas: #fbf7f2;
+  --bg-surface: rgba(255, 255, 255, 0.78);
+  --bg-surface-solid: #ffffff;
+  --bg-sunken: rgba(111, 29, 71, 0.06);
+  --bg-brand: #4a1532;
+  --bg-glass: rgba(255, 255, 255, 0.5);
+  --bg-glass-strong: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --glass-highlight: rgba(255, 255, 255, 0.75);
+  --glass-blur: 28px;
+
+  --text-primary: #3a3340;
+  --text-secondary: #6b6474;
+  --text-tertiary: #7b7483;
+  --text-heading: #4a1532;
+  --text-on-brand: #fff8f2;
+
+  --action-primary: #6f1d47;
+  --action-primary-hover: #5a173a;
+  --action-on-primary: #fff8f2;
+  --accent-memory: #c8505b;
+  --accent-spirit: #b88a44;
+  --accent-italic: #c8505b;
+  --focus-ring: #6f1d47;
+
+  /* Deeper green and amber than the website, so small text on the soft tints stays readable. */
+  --status-good: #167a41;
+  --status-good-tint: #e5f6ec;
+  --status-attention: #8f5a0f;
+  --status-attention-tint: #fbf1dc;
+  --status-safety: #c53030;
+  --status-safety-tint: #fdecec;
+  --status-info: #2c64a8;
+  --status-info-tint: #e4eef9;
+  /* Solid red for the safety button and banner (white text), same in both themes. */
+  --danger-solid: #c53030;
+
+  --aubergine-800: #4a1532;
+  --rose-500: #c8505b;
+  --lotus-gold-500: #b88a44;
+  --lotus-gold-300: #e2bd72;
+  --cream-50: #fbf7f2;
+
+  /* Borders: plum at low strength, as on the website */
+  --border-default: rgba(110, 29, 71, 0.16);
+  --border-subtle: rgba(110, 29, 71, 0.08);
+
+  /* Colour scales (named aubergine-* for compatibility; the hues are the website's plum) */
+  --aubergine-50: #f9eef3;
+  --aubergine-100: #f1dbe6;
+  --aubergine-200: #e3b9cd;
+  --aubergine-400: #b0658a;
+  --aubergine-600: #8a2a5c;
+  --aubergine-700: #6f1d47;
+  --aubergine-900: #350e24;
+  --aubergine-950: #22091a;
+  --rose-100: #fbefee;
+  --rose-300: #e8a0a6;
+  --rose-700: #9c3340;
+  --lotus-gold-100: #f6ecd4;
+  --lotus-gold-700: #8a6428;
+  --cream-100: #f6efe6;
+  --cream-200: #ece2d4;
+  --cream-300: #d9cbb6;
+  --ink-100: #efe9ee;
+  --ink-200: #ddd6df;
+  --ink-300: #b9b2bd;
+  --ink-500: #7b7483;
+  --ink-600: #6b6474;
+  --ink-700: #4a4350;
+  --ink-900: #3a3340;
+  --world-500: #6f93b8;
+  --world-100: #dce8f2;
+  --world-300: #a9c4de;
+
+  /* Soft colour glows behind the page (website hero) */
+  --blob-1: rgba(244, 187, 200, 0.45);
+  --blob-2: rgba(214, 196, 240, 0.4);
+  --blob-3: rgba(246, 214, 172, 0.35);
+
+  /* Tile families: two-stop vertical gradient, no gloss. */
+  --tile-care-top: var(--aubergine-600);
+  --tile-care-bottom: var(--aubergine-700);
+  --tile-memory-top: var(--rose-300);
+  --tile-memory-bottom: var(--rose-500);
+  --tile-spirit-top: var(--lotus-gold-300);
+  --tile-spirit-bottom: var(--lotus-gold-500);
+  --tile-world-top: var(--world-300);
+  --tile-world-bottom: var(--world-500);
+  --tile-home-top: var(--cream-50);
+  --tile-home-bottom: var(--cream-200);
+  --tile-safety-top: #dc5a4f;
+  --tile-safety-bottom: var(--danger-solid);
+  --tile-glyph-light: var(--cream-50);
+  --tile-glyph-dark: var(--aubergine-800);
+  --tile-home-glyph: var(--aubergine-800);
+
+  /* Type scale */
+  --type-display: 400 44px/52px var(--font-display);
+  --type-title-1: 400 34px/42px var(--font-display);
+  --type-title-2: 400 26px/34px var(--font-display);
+  --type-heading: 600 18px/24px var(--font-ui);
+  --type-body-lg: 400 18px/28px var(--font-ui);
+  --type-body: 400 16px/24px var(--font-ui);
+  --type-body-sm: 400 14px/20px var(--font-ui);
+  --type-label: 500 14px/20px var(--font-ui);
+  --type-caption: 400 12px/16px var(--font-ui);
+  --type-kicker: 500 12px/16px var(--font-ui);
+  --kicker-tracking: 0.32em;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 28px;
+  --radius-tile: 26%;
+  --radius-full: 999px;
+  --wallpaper-light: url('/wallpapers/lake-dusk.jpg');
+  --wallpaper-dark: url('/wallpapers/lake-night.jpg');
+  --wallpaper: var(--wallpaper-light);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Fluid type + layout that track viewport width */
+  --page-pad-x: clamp(0.75rem, 2.2vw, 1.75rem);
+  --page-pad-y: clamp(0.75rem, 1.8vw, 1.5rem);
+  --shell-gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  --shell-max: min(1440px, 100%);
+  --font-size-ui: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --font-size-display: clamp(1.75rem, 1.35rem + 1.6vw, 2.75rem);
+  --font-size-title: clamp(1.35rem, 1.15rem + 0.9vw, 2.125rem);
+  --font-size-body: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+  --tile-size: clamp(3.25rem, 2.6rem + 2.2vw, 4rem);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --vh: 1vh;
+  --app-height: 100dvh;
+
+  --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Inter', 'Noto Sans', system-ui, sans-serif;
+  --font-indic: 'Noto Sans', 'Inter', system-ui, sans-serif;
+
+  --motion-instant: 0ms;
+  --motion-quick: 120ms;
+  --motion-standard: 200ms;
+  --motion-gentle: 320ms;
+  --ease-enter: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 1, 1);
+
+  --shadow-1: 0 1px 2px rgba(74, 21, 50, 0.04), 0 10px 28px -14px rgba(74, 21, 50, 0.2);
+  --shadow-2: 0 20px 44px -22px rgba(74, 21, 50, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  --shadow-3: 0 30px 70px -36px rgba(74, 21, 50, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg-canvas: #18171a;
+  --bg-surface: rgba(40, 38, 43, 0.85);
+  --bg-surface-solid: #242227;
+  --bg-sunken: rgba(0, 0, 0, 0.28);
+  --bg-brand: #4a1532;
+  --bg-glass: rgba(36, 34, 38, 0.55);
+  --bg-glass-strong: rgba(40, 38, 43, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+  --glass-blur: 32px;
+  --wallpaper: var(--wallpaper-dark);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -14px rgba(0, 0, 0, 0.6);
+  --shadow-2: 0 20px 44px -22px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-3: 0 30px 70px -36px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --text-primary: #e9e3dc;
+  --text-secondary: #b3aab3;
+  --text-tertiary: #928a95;
+  --text-heading: #f5efe7;
+  --text-on-brand: #fff8f2;
+
+  --border-default: rgba(255, 255, 255, 0.14);
+  --border-subtle: rgba(255, 255, 255, 0.07);
+
+  --action-primary: #e2bd72;
+  --action-primary-hover: #edcb86;
+  --action-on-primary: #22180c;
+  --accent-memory: #e8a0a6;
+  --accent-spirit: #d9b065;
+  --accent-italic: #e6bf74;
+  --focus-ring: #e2bd72;
+
+  --status-good: #4ccf80;
+  --status-good-tint: rgba(76, 207, 128, 0.14);
+  --status-attention: #e8b34f;
+  --status-attention-tint: rgba(232, 179, 79, 0.14);
+  --status-safety: #f07272;
+  --status-safety-tint: rgba(240, 114, 114, 0.14);
+  --status-info: #8fb4e3;
+  --status-info-tint: rgba(143, 180, 227, 0.14);
+
+  /* Home tiles (Pendant, Settings, My Profile) sit quietly on the dark canvas */
+  --tile-home-top: #34303a;
+  --tile-home-bottom: #2a272f;
+  --tile-home-glyph: #e2bd72;
+
+  --blob-1: rgba(226, 189, 114, 0.1);
+  --blob-2: rgba(111, 29, 71, 0.22);
+  --blob-3: rgba(226, 189, 114, 0.06);
+
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-quick: 120ms;
+    --motion-standard: 120ms;
+    --motion-gentle: 120ms;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  min-height: var(--app-height);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background:
+    radial-gradient(60rem 36rem at 8% -6%, var(--blob-1), transparent 70%),
+    radial-gradient(52rem 36rem at 100% 0%, var(--blob-2), transparent 70%),
+    radial-gradient(60rem 40rem at 60% 105%, var(--blob-3), transparent 70%), var(--bg-canvas);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--text-heading);
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+/* Small gold label above a heading, as on the website */
+.sv-kicker {
+  font: var(--type-kicker);
+  letter-spacing: var(--kicker-tracking);
+  text-transform: uppercase;
+  color: var(--accent-spirit);
+}
+
+/* One italic phrase in a heading, in the accent colour: <h1>Care, in harmony. <em>Life, on their terms.</em></h1> */
+h1 em,
+h2 em,
+h3 em {
+  font-style: italic;
+  color: var(--accent-italic);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
