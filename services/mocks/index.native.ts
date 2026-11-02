@@ -1,8 +1,6 @@
-import 'react-native-url-polyfill/auto';
-import { handlers } from './handlers';
+import { createMockFetch } from './fetchMock';
 
-/** Mobile: MSW intercepts fetch in the JS runtime (no service worker). Unmatched requests use the network. */
+/** Mobile: replace global fetch with the route-based mock. */
 export async function startMocks(): Promise<void> {
-  const { setupServer } = await import('msw/native');
-  setupServer(...handlers).listen({ onUnhandledRequest: 'bypass' });
+  globalThis.fetch = createMockFetch(globalThis.fetch.bind(globalThis));
 }

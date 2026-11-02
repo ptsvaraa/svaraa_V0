@@ -1,24 +1,14 @@
 import { http, HttpResponse } from 'msw';
 import { env } from '@/config/env';
-import type { components } from '@/services/api/schema';
+import { routes } from './routes';
 
-const url = (path: string) => `${env.apiUrl}${path}`;
+export { DEMO_CODE, circles } from './routes';
 
-/** Demo code accepted by the mock backend. */
-export const DEMO_CODE = '000000';
-
-export const circles: components['schemas']['Circle'][] = [
-  { id: 'c1', name: 'Amma', status: 'connected' },
-  { id: 'c2', name: 'Appa', status: 'low_battery' },
-];
-
-export const handlers = [
-  http.post(url('/auth/otp/send'), () => HttpResponse.json({ cooldownSec: 30 })),
-  http.post(url('/auth/otp/verify'), async ({ request }) => {
-    const body = (await request.json()) as components['schemas']['OtpVerifyRequest'];
-    if (body.code !== DEMO_CODE) return HttpResponse.json({ message: 'Wrong code' }, { status: 400 });
-    return HttpResponse.json({ token: 'mock-token', role: 'caretaker' as const });
+/** MSW handlers for web (service worker) and Jest. Built from routes.ts. */
+export const handlers = routes.map((r) =>
+  (r.method === 'GET' ? http.get : http.post)(`${env.apiUrl}${r.path}`, async ({ request }) => {
+    const body = r.method === 'POST' ? await request.json().catch(() => undefined) : undefined;
+    const out = r.respond(body);
+    return HttpResponse.json(out.body as Record<string, unknown>, { status: out.status });
   }),
-  http.get(url('/me'), () => HttpResponse.json({ id: 'u1', name: 'Asha Rao', role: 'caretaker' as const })),
-  http.get(url('/circles'), () => HttpResponse.json(circles)),
-];
+);
