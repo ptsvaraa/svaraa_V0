@@ -1,6 +1,6 @@
 import { darkColors, lightColors, radius, space, typeScale, type ColorSet } from './tokens';
 
-export type ThemeMode = 'caretaker' | 'wearer';
+export type ThemeMode = 'caregiver' | 'wearer';
 export type ColorScheme = 'light' | 'dark';
 
 export type Theme = {
@@ -11,18 +11,20 @@ export type Theme = {
   radius: typeof radius;
   /** Multiplies every font size and line height. Wearer = larger text. */
   fontScale: number;
-  /** Smallest height of anything tappable, in dp. Wearer buttons are 56 dp or more. */
+  /** Smallest height of anything tappable, in dp. Same in both themes. */
   minTarget: number;
   /** Button heights by size. */
   buttonHeight: { sm: number; md: number; lg: number };
   typeScale: typeof typeScale;
 };
 
-const CARETAKER = { fontScale: 1, minTarget: 44, buttonHeight: { sm: 36, md: 44, lg: 52 } } as const;
-const WEARER = { fontScale: 1.25, minTarget: 56, buttonHeight: { sm: 56, md: 64, lg: 72 } } as const;
+/** Buttons and tap targets are the same size in both themes. Only text size differs. */
+const TARGETS = { minTarget: 44, buttonHeight: { sm: 36, md: 44, lg: 52 } } as const;
+const CAREGIVER = { fontScale: 1, ...TARGETS } as const;
+const WEARER = { fontScale: 1.25, ...TARGETS } as const;
 
 export function createTheme(mode: ThemeMode, scheme: ColorScheme): Theme {
-  const sizes = mode === 'wearer' ? WEARER : CARETAKER;
+  const sizes = mode === 'wearer' ? WEARER : CAREGIVER;
   return {
     mode,
     scheme,

@@ -1,6 +1,6 @@
 # Svaraa Mobile
 
-Expo + TypeScript (strict) + Expo Router. iOS, Android, web (caretaker screens only).
+Expo + TypeScript (strict) + Expo Router. iOS, Android, web (caregiver screens only).
 Rules for people and AI tools: [`CLAUDE.md`](CLAUDE.md). Plan: [`docs/frontend-plan.md`](docs/frontend-plan.md).
 
 ## Run
@@ -26,7 +26,7 @@ npm run lint && npm run typecheck && npm test && npm run i18n:check && npm run b
 | `app/`      | Screens only                                                             |
 | `features/` | auth, circles, devices, invites, consent, sos, settings                  |
 | `services/` | api (generated client), mocks (MSW), storage; pendant, voice, push later |
-| `ui/`       | tokens, caretaker + wearer themes, components                            |
+| `ui/`       | tokens, caregiver + wearer themes, components                            |
 | `i18n/`     | `en.json`, `hi.json`                                                     |
 | `config/`   | env, feature flags                                                       |
 | `docs/`     | plan, wireframes, UI guide, source documents                             |

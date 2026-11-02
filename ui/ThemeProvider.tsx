@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 import { useSettings } from '@/features/settings/store';
 import { createTheme, type Theme } from './theme';
 
-const ThemeContext = createContext<Theme>(createTheme('caretaker', 'light'));
+const ThemeContext = createContext<Theme>(createTheme('caregiver', 'light'));
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const mode = useSettings((s) => s.themeMode);

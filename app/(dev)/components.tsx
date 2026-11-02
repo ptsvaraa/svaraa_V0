@@ -122,7 +122,7 @@ export default function ComponentsDemo() {
           value={themeMode}
           onChange={setThemeMode}
           options={[
-            { id: 'caretaker', label: t('demo.theme.caretaker') },
+            { id: 'caregiver', label: t('demo.theme.caregiver') },
             { id: 'wearer', label: t('demo.theme.wearer') },
           ]}
         />

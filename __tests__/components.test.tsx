@@ -18,7 +18,7 @@ function wrap(ui: React.ReactElement) {
   );
 }
 
-beforeEach(() => useSettings.setState({ themeMode: 'caretaker', scheme: 'light' }));
+beforeEach(() => useSettings.setState({ themeMode: 'caregiver', scheme: 'light' }));
 
 describe('Button', () => {
   it('calls onPress and is labelled', async () => {
@@ -33,13 +33,14 @@ describe('Button', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Go' }));
     expect(onPress).not.toHaveBeenCalled();
   });
-  it('is at least 56 dp tall in the wearer theme', async () => {
-    expect(createTheme('wearer', 'light').buttonHeight.sm).toBeGreaterThanOrEqual(56);
-    useSettings.setState({ themeMode: 'wearer' });
-    await wrap(<Button label="Big" size="sm" />);
-    const style = screen.getByRole('button', { name: 'Big' }).props.style;
-    const flat = typeof style === 'function' ? style({ pressed: false }) : style;
-    expect(flat.minHeight).toBeGreaterThanOrEqual(56);
+  it('is the same size in the caregiver and wearer themes', () => {
+    expect(createTheme('wearer', 'light').buttonHeight).toEqual(
+      createTheme('caregiver', 'light').buttonHeight,
+    );
+    expect(createTheme('wearer', 'light').minTarget).toBe(createTheme('caregiver', 'light').minTarget);
+    expect(createTheme('wearer', 'light').fontScale).toBeGreaterThan(
+      createTheme('caregiver', 'light').fontScale,
+    );
   });
 });
 

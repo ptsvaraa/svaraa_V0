@@ -877,7 +877,7 @@
       <div class="in">
         <a href="#decisions">Decisions applied</a><a href="#map">Flow map</a><a href="#pA">A · Sign in</a
         ><a href="#pB">B · Role + permissions</a> <a href="#pC">C · Wearer-first</a
-        ><a href="#pD">D · Caretaker-led</a><a href="#pE">E · Home + circle</a><a href="#link">Setup link</a
+        ><a href="#pD">D · Caregiver-led</a><a href="#pE">E · Home + circle</a><a href="#link">Setup link</a
         ><a href="#claim">Device claim</a><a href="#model">Data model</a><a href="#open">Still open</a>
       </div>
     </nav>
@@ -887,7 +887,7 @@
       <h1>Key screens, <em>start to protected</em></h1>
       <p class="lede">
         Low-fidelity wireframes for the hybrid flow, with your review comments applied. Numbered pins on each
-        screen match the notes beneath it. The wearer always has a smartphone and pairs on it; the caretaker
+        screen match the notes beneath it. The wearer always has a smartphone and pairs on it; the caregiver
         never pairs.
       </p>
 
@@ -949,7 +949,7 @@
           <b>Step by step</b>
           <ol class="qs" style="margin-top: 10px">
             <li>
-              The caretaker taps Send link on D4. The app asks the server to create an invite for this circle.
+              The caregiver taps Send link on D4. The app asks the server to create an invite for this circle.
               The server checks the caller is the owner or an Admin, revokes any earlier open link for the
               circle, creates the token and returns the URL.
             </li>
@@ -963,7 +963,7 @@
               landing page shows a short code she can type in.
             </li>
             <li>
-              The app asks the server what the token is. The server answers with only the caretaker’s first
+              The app asks the server what the token is. The server answers with only the caregiver’s first
               name and the link’s status, and rate-limits these lookups.
             </li>
             <li>
@@ -974,7 +974,7 @@
             <li>
               The server now returns the circle summary for D7. When Asha agrees, the app sends the consent
               with the token and consent-text version. The server records it, marks the link used and notifies
-              the caretaker. Later steps (pairing, drill) run on her signed-in session, not on the link.
+              the caregiver. Later steps (pairing, drill) run on her signed-in session, not on the link.
             </li>
           </ol>
         </div>
@@ -1054,7 +1054,7 @@
               </tr>
               <tr>
                 <td><b>One-time token in the box (QR)</b></td>
-                <td>Enables caretaker to claim remotely before the pendant reaches the wearer</td>
+                <td>Enables caregiver to claim remotely before the pendant reaches the wearer</td>
                 <td>A photo of the inside card lets someone claim first</td>
                 <td>Unique token printed per box, stored hashed in the cloud</td>
               </tr>
@@ -1062,7 +1062,7 @@
                 <td><b>Press-to-claim over Bluetooth</b></td>
                 <td>Strong. Proves the person is physically holding the pendant</td>
                 <td>
-                  Caretaker can’t claim remotely, because the wearer’s phone is the one near the pendant
+                  Caregiver can’t claim remotely, because the wearer’s phone is the one near the pendant
                 </td>
                 <td>Button-triggered claim window in firmware</td>
               </tr>
@@ -1166,7 +1166,7 @@
         <div class="model">
           <div class="card">
             <b>User</b><code>id · phone · google_id</code><br />Signs in. May be a wearer in one circle and a
-            caretaker in another.
+            caregiver in another.
           </div>
           <div class="card">
             <b>Circle (wearer profile)</b
@@ -1202,7 +1202,7 @@
           </li>
           <li>
             Setup link: is 72 hours right, and is sharing through the phone’s share sheet fine for v0, or do
-            you want Svaraa to send the SMS itself? I assumed 72 hours, bound to the number the caretaker
+            you want Svaraa to send the SMS itself? I assumed 72 hours, bound to the number the caregiver
             typed, sent via the share sheet.
           </li>
           <li>
@@ -1210,7 +1210,7 @@
             out-of-band key later? The hardware team needs to confirm what the chip supports.
           </li>
           <li>
-            Caretaker-led consent: D7 keeps its own screen because it must show what the caretaker entered.
+            Caregiver-led consent: D7 keeps its own screen because it must show what the caregiver entered.
             Are you happy with that, or do you want a checkbox on D6 like wearer-first C1?
           </li>
           <li>
@@ -1222,7 +1222,7 @@
             with an option to transfer or release the device.
           </li>
           <li>
-            Should caretaker-entered health notes and pacemaker status be visible to the wearer for review
+            Should caregiver-entered health notes and pacemaker status be visible to the wearer for review
             before they consent? I assumed yes, shown on the consent screen.
           </li>
         </ol>
@@ -1239,7 +1239,7 @@
       const DEC = [
         [
           'Wearer always has a smartphone',
-          'Pairing and the gateway are always the wearer’s phone. The caretaker never pairs; they send a setup link (D4). The “no smartphone” option is gone.',
+          'Pairing and the gateway are always the wearer’s phone. The caregiver never pairs; they send a setup link (D4). The “no smartphone” option is gone.',
         ],
         [
           'No-screen pairing',
@@ -1247,15 +1247,15 @@
         ],
         [
           'Consent is a checkbox in wearer-first',
-          'The separate consent screen is gone; it’s a checkbox on About you (C1). The caretaker-led link keeps its own consent screen (D7) because it must show what the caretaker entered.',
+          'The separate consent screen is gone; it’s a checkbox on About you (C1). The caregiver-led link keeps its own consent screen (D7) because it must show what the caregiver entered.',
         ],
         [
           'Consent by link',
           'One link carries invite and consent (D4 → D7). The circle stays “Pending consent” until the wearer agrees (D5).',
         ],
         [
-          'Caretaker finishes before sending',
-          'Emergency contacts moved ahead of the link (D3), so the link is the last caretaker step (D4) and the wearer only consents and pairs.',
+          'Caregiver finishes before sending',
+          'Emergency contacts moved ahead of the link (D3), so the link is the last caregiver step (D4) and the wearer only consents and pairs.',
         ],
         [
           'Owner = flag on whoever claimed',
@@ -1263,7 +1263,7 @@
         ],
         [
           'Persistent Home card',
-          'Resumable setup card on Home until a device is Active (A4), and on each pending wearer for caretakers (E1).',
+          'Resumable setup card on Home until a device is Active (A4), and on each pending wearer for caregivers (E1).',
         ],
         [
           'No address, no private server in v0',
@@ -1275,7 +1275,7 @@
         ],
         [
           'Permissions up front',
-          'A permission primer comes right after role choice (B2 for wearers). Caretakers are only asked for notifications (B3).',
+          'A permission primer comes right after role choice (B2 for wearers). Caregivers are only asked for notifications (B3).',
         ],
         [
           'Emergency contacts: number only, alerts predefined',
@@ -1283,10 +1283,10 @@
         ],
         [
           'Many-to-many, multiple devices',
-          'A caretaker Home lists several wearers, each with their own state (E1). The data model below is generic.',
+          'A caregiver Home lists several wearers, each with their own state (E1). The data model below is generic.',
         ],
         [
-          'No caretaker consent on behalf',
+          'No caregiver consent on behalf',
           'Wearer must always agree in person or via the link. Skipped the delegated-consent flow for v0.',
         ],
         [
@@ -1341,7 +1341,7 @@
 
       /* ---------- screens ---------- */
       const W = 'Wearer’s phone',
-        C = 'Caretaker’s phone',
+        C = 'Caregiver’s phone',
         ANY = 'Any phone';
       const TABS_H = { t: 'tabs', v: ['Home', 'Explore', 'Alerts', 'Profile'] };
       const PH = [
@@ -1438,7 +1438,7 @@
           id: 'pB',
           title: 'B · Role and permissions',
           tag: 'Shared',
-          desc: 'One question picks the path. Permissions come right after, before any setup step. Wearers need the full set because their phone is the gateway; caretakers only need notifications.',
+          desc: 'One question picks the path. Permissions come right after, before any setup step. Wearers need the full set because their phone is the gateway; caregivers only need notifications.',
           screens: [
             {
               id: 'B1',
@@ -1448,14 +1448,14 @@
                 { t: 'h', v: 'Who are you?' },
                 { t: 'p', v: 'This sets up the right steps for you.' },
                 { t: 'opt', v: 'I’ll wear Svaraa', sub: 'Setting up my own pendant', sel: 1, pin: 1 },
-                { t: 'opt', v: 'I’m a caretaker', sub: 'Setting up for a family member', pin: 2 },
+                { t: 'opt', v: 'I’m a caregiver', sub: 'Setting up for a family member', pin: 2 },
                 { t: 'opt', v: 'Not sure yet / it’s a gift', sub: 'Save and come back later', pin: 3 },
                 { t: 'sp' },
                 { t: 'btn', v: 'Continue' },
               ],
               notes: [
                 'Goes to B2, then the wearer-first path (C).',
-                'Goes to B3, then the caretaker-led path (D). Shows a hint: the wearer will need their own smartphone.',
+                'Goes to B3, then the caregiver-led path (D). Shows a hint: the wearer will need their own smartphone.',
                 'Creates nothing. Home keeps the setup card in “not started”.',
               ],
             },
@@ -1497,7 +1497,7 @@
             },
             {
               id: 'B3',
-              t: 'Permissions · caretaker',
+              t: 'Permissions · caregiver',
               who: C,
               body: [
                 { t: 'h', v: 'Stay informed' },
@@ -1511,7 +1511,7 @@
                 { t: 'sp' },
                 { t: 'btn', v: 'Allow notifications' },
               ],
-              notes: ['Keeps the caretaker path light. Their phone never pairs with the pendant.'],
+              notes: ['Keeps the caregiver path light. Their phone never pairs with the pendant.'],
             },
           ],
         },
@@ -1660,7 +1660,7 @@
             },
             {
               id: 'C7',
-              t: 'Invite a caretaker',
+              t: 'Invite a caregiver',
               who: W,
               body: [
                 { t: 'top', v: 'Optional' },
@@ -1705,9 +1705,9 @@
 
         {
           id: 'pD',
-          title: 'D · Caretaker-led path',
-          tag: '“I’m a caretaker”',
-          desc: 'The caretaker does all their part first: claims the box, enters the wearer’s basics, and sets emergency contacts. Only then do they send the single setup link. The wearer opens it on their own phone, agrees, and pairs. Until she agrees, the circle shows Pending consent.',
+          title: 'D · Caregiver-led path',
+          tag: '“I’m a caregiver”',
+          desc: 'The caregiver does all their part first: claims the box, enters the wearer’s basics, and sets emergency contacts. Only then do they send the single setup link. The wearer opens it on their own phone, agrees, and pairs. Until she agrees, the circle shows Pending consent.',
           screens: [
             {
               id: 'D1',
@@ -1727,7 +1727,7 @@
               ],
               notes: [
                 'Remote claim by one-time token. The claim stays “unverified” until the wearer pairs it.',
-                'Owner flag goes on the caretaker’s membership.',
+                'Owner flag goes on the caregiver’s membership.',
               ],
             },
             {
@@ -1751,7 +1751,7 @@
               notes: [
                 'The number the setup link is bound to. Asha must sign in with this number.',
                 'Asha reviews all of this on the consent screen and can edit. No address in v0.',
-                'Optional, same as C1. Defaults to her first name. The caretaker usually knows the name she answers to.',
+                'Optional, same as C1. Defaults to her first name. The caregiver usually knows the name she answers to.',
               ],
             },
             {
@@ -1770,7 +1770,7 @@
                 { t: 'btn', v: 'Continue' },
               ],
               notes: [
-                'The caretaker is pre-filled as contact 1 and can remove themselves.',
+                'The caregiver is pre-filled as contact 1 and can remove themselves.',
                 'Held as a draft until Asha agrees. She sees and can change them on her consent screen (D7). Nobody is alerted before that.',
               ],
             },
@@ -1807,7 +1807,7 @@
                 { t: 'btn', v: 'Done' },
               ],
               notes: [
-                'Everything on the caretaker’s side is finished before the link goes out. Asha’s phone only has to consent and pair, and nothing is active until she agrees.',
+                'Everything on the caregiver’s side is finished before the link goes out. Asha’s phone only has to consent and pair, and nothing is active until she agrees.',
                 'One link does both jobs: invite and consent. It carries only a random token, is single-use, expires after 72 hours (suggested) and is bound to Asha’s number. Full detail in “Setup link” below.',
                 'Set expectations now so a no-smartphone case is caught before the buyer gets stuck.',
               ],
@@ -1897,9 +1897,9 @@
                 { t: 'btn', v: 'Agree and continue' },
               ],
               notes: [
-                'Keeps its own screen, unlike C1’s checkbox, because it must spell out what the caretaker will see and what they entered on Asha’s behalf.',
-                'Asha sees and can correct everything the caretaker typed, including health notes and contacts.',
-                'Agree turns the circle from Pending consent to Pending pairing and notifies the caretaker.',
+                'Keeps its own screen, unlike C1’s checkbox, because it must spell out what the caregiver will see and what they entered on Asha’s behalf.',
+                'Asha sees and can correct everything the caregiver typed, including health notes and contacts.',
+                'Agree turns the circle from Pending consent to Pending pairing and notifies the caregiver.',
               ],
             },
             {
@@ -1917,11 +1917,11 @@
           id: 'pE',
           title: 'E · Home, circle and edge cases',
           tag: 'After setup',
-          desc: 'What people see once things are active, and how ownership and a blocked claim behave. Caretaker Home holds many wearers; contacts are kept separate from members.',
+          desc: 'What people see once things are active, and how ownership and a blocked claim behave. Caregiver Home holds many wearers; contacts are kept separate from members.',
           screens: [
             {
               id: 'E1',
-              t: 'Caretaker Home',
+              t: 'Caregiver Home',
               who: C,
               body: [
                 { t: 'top', v: 'Your circles', r: '＋' },
@@ -1949,7 +1949,7 @@
               notes: [
                 'One card per circle. Many wearers, many devices.',
                 'Pending states surface here too, with the next action.',
-                'Starts the caretaker path again from D1.',
+                'Starts the caregiver path again from D1.',
               ],
             },
             {
@@ -2071,7 +2071,7 @@
  ]
    .map((x) => chip(...x))
    .join(ar)}</div>
- <div class="maprow"><span class="lab">Caretaker-led · caretaker’s phone</span>${[
+ <div class="maprow"><span class="lab">Caregiver-led · caregiver’s phone</span>${[
    ['B3', 'Notifications', 1],
    ['D1', 'Claim', 1],
    ['D2', 'Wearer basics'],
@@ -2081,7 +2081,7 @@
  ]
    .map((x) => chip(...x))
    .join(ar)}</div>
- <div class="maprow"><span class="lab">Caretaker-led · then on the wearer’s phone</span>${[
+ <div class="maprow"><span class="lab">Caregiver-led · then on the wearer’s phone</span>${[
    ['D6', 'Opens link', 1],
    ['D7', 'Consent', 1],
    ['B2', 'Permissions'],
@@ -2092,7 +2092,7 @@
    .map((x) => chip(...x))
    .join(ar)}</div>
  <div class="maprow"><span class="lab">After setup</span>${[
-   ['E1', 'Caretaker Home'],
+   ['E1', 'Caregiver Home'],
    ['E2', 'Wearer Home'],
    ['E3', 'Circle'],
    ['E4', 'Transfer owner', 1],

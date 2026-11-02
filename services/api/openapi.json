@@ -91,7 +91,7 @@
         "required": ["token", "role"],
         "properties": {
           "token": { "type": "string" },
-          "role": { "type": "string", "enum": ["caretaker", "wearer"] }
+          "role": { "type": "string", "enum": ["caregiver", "wearer"] }
         }
       },
       "Me": {
@@ -100,7 +100,7 @@
         "properties": {
           "id": { "type": "string" },
           "name": { "type": "string" },
-          "role": { "type": "string", "enum": ["caretaker", "wearer"] }
+          "role": { "type": "string", "enum": ["caregiver", "wearer"] }
         }
       },
       "Circle": {

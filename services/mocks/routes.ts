@@ -26,14 +26,14 @@ export const routes: MockRoute[] = [
     respond: (body) => {
       const { code } = (body ?? {}) as Partial<components['schemas']['OtpVerifyRequest']>;
       return code === DEMO_CODE
-        ? { status: 200, body: { token: 'mock-token', role: 'caretaker' } }
+        ? { status: 200, body: { token: 'mock-token', role: 'caregiver' } }
         : { status: 400, body: { message: 'Wrong code' } };
     },
   },
   {
     method: 'GET',
     path: '/me',
-    respond: () => ({ status: 200, body: { id: 'u1', name: 'Asha Rao', role: 'caretaker' } }),
+    respond: () => ({ status: 200, body: { id: 'u1', name: 'Asha Rao', role: 'caregiver' } }),
   },
   { method: 'GET', path: '/circles', respond: () => ({ status: 200, body: circles }) },
 ];

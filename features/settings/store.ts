@@ -13,9 +13,9 @@ type SettingsState = {
   setLanguage: (language: Language) => void;
 };
 
-/** App-level settings. Theme mode will later follow the signed-in role (caretaker or wearer). */
+/** App-level settings. Theme mode will later follow the signed-in role (caregiver or wearer). */
 export const useSettings = create<SettingsState>((set) => ({
-  themeMode: 'caretaker',
+  themeMode: 'caregiver',
   scheme: 'system',
   language: 'en',
   setThemeMode: (themeMode) => set({ themeMode }),

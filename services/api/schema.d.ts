@@ -88,13 +88,13 @@ export interface components {
         Session: {
             token: string;
             /** @enum {string} */
-            role: "caretaker" | "wearer";
+            role: "caregiver" | "wearer";
         };
         Me: {
             id: string;
             name: string;
             /** @enum {string} */
-            role: "caretaker" | "wearer";
+            role: "caregiver" | "wearer";
         };
         Circle: {
             id: string;
