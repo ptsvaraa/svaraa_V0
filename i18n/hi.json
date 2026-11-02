@@ -1,0 +1,91 @@
+{
+  "common": {
+    "continue": "आगे बढ़ें",
+    "back": "पीछे",
+    "cancel": "रद्द करें",
+    "done": "हो गया",
+    "close": "बंद करें",
+    "language": "भाषा",
+    "english": "English",
+    "hindi": "हिन्दी"
+  },
+  "demo": {
+    "title": "घटक",
+    "kicker": "डिज़ाइन सिस्टम",
+    "intro": "हर घटक, दोनों थीम और दोनों भाषाओं में।",
+    "headline": "देखभाल, तालमेल में।",
+    "section": {
+      "settings": "सेटिंग्स",
+      "buttons": "बटन",
+      "inputs": "इनपुट",
+      "otp": "वन-टाइम कोड",
+      "cards": "कार्ड",
+      "chips": "चिप्स",
+      "steps": "चरण",
+      "sheet": "शीट"
+    },
+    "theme": {
+      "caretaker": "देखभालकर्ता",
+      "wearer": "पहनने वाला",
+      "light": "हल्का",
+      "dark": "गहरा",
+      "system": "सिस्टम"
+    },
+    "button": {
+      "primary": "मुख्य",
+      "secondary": "दूसरा",
+      "tertiary": "तीसरा",
+      "safety": "मदद बुलाएँ",
+      "disabled": "बंद",
+      "loading": "सहेज रहे हैं"
+    },
+    "input": {
+      "name": "पूरा नाम",
+      "namePlaceholder": "आशा राव",
+      "nameHint": "जैसा आपकी आईडी पर है।",
+      "phone": "फ़ोन नंबर",
+      "phoneError": "10 अंकों का फ़ोन नंबर दर्ज करें।"
+    },
+    "card": {
+      "title": "पेंडेंट सेट करें",
+      "body": "दो आसान चरण और आप तैयार हैं।",
+      "action": "सेटअप शुरू करें"
+    },
+    "chip": {
+      "connected": "जुड़ा हुआ",
+      "attention": "बैटरी कम है",
+      "safety": "रिकॉर्डिंग",
+      "neutral": "जुड़ा नहीं है",
+      "private": "निजी"
+    },
+    "steps": {
+      "account": "खाता",
+      "household": "परिवार",
+      "pendant": "पेंडेंट",
+      "contacts": "संपर्क"
+    },
+    "sheet": {
+      "open": "शीट खोलें",
+      "title": "संपर्क जोड़ें",
+      "body": "SOS दबाने पर उन्हें अलर्ट मिलेगा।"
+    },
+    "headlineAccent": "जीवन, उनकी शर्तों पर।"
+  },
+  "otp": {
+    "label": "सत्यापन कोड",
+    "digit": "अंक {{n}} / {{total}}",
+    "send": "कोड भेजें",
+    "verify": "सत्यापित करें",
+    "resend": "कोड दोबारा भेजें",
+    "resendIn": "{{seconds}} सेकंड में दोबारा भेजें",
+    "sent": "कोड {{to}} पर भेजा गया",
+    "verified": "सत्यापित",
+    "wrong": "कोड सही नहीं है। दोबारा कोशिश करें।"
+  },
+  "steps": {
+    "done": "पूरा",
+    "current": "मौजूदा चरण",
+    "locked": "अभी उपलब्ध नहीं",
+    "progress": "चरण {{current}} / {{total}}"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "cancel": "Cancel",
+    "done": "Done",
+    "close": "Close",
+    "language": "Language",
+    "english": "English",
+    "hindi": "हिन्दी"
+  },
+  "demo": {
+    "title": "Components",
+    "kicker": "Design system",
+    "intro": "Every component, in both themes and both languages.",
+    "headline": "Care, in harmony.",
+    "section": {
+      "settings": "Settings",
+      "buttons": "Buttons",
+      "inputs": "Inputs",
+      "otp": "One-time code",
+      "cards": "Cards",
+      "chips": "Chips",
+      "steps": "Steps",
+      "sheet": "Sheet"
+    },
+    "theme": {
+      "caretaker": "Caretaker",
+      "wearer": "Wearer",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "button": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "tertiary": "Tertiary",
+      "safety": "Call for help",
+      "disabled": "Disabled",
+      "loading": "Saving"
+    },
+    "input": {
+      "name": "Full name",
+      "namePlaceholder": "Asha Rao",
+      "nameHint": "As it appears on your ID.",
+      "phone": "Phone number",
+      "phoneError": "Enter a 10-digit phone number."
+    },
+    "card": {
+      "title": "Set up the pendant",
+      "body": "Two quick steps and you are ready.",
+      "action": "Start setup"
+    },
+    "chip": {
+      "connected": "Connected",
+      "attention": "Low battery",
+      "safety": "Recording",
+      "neutral": "Not connected",
+      "private": "Private"
+    },
+    "steps": {
+      "account": "Account",
+      "household": "Household",
+      "pendant": "Pendant",
+      "contacts": "Contacts"
+    },
+    "sheet": {
+      "open": "Open sheet",
+      "title": "Add a contact",
+      "body": "They will get an alert if you press SOS."
+    },
+    "headlineAccent": "Life, on their terms."
+  },
+  "otp": {
+    "label": "Verification code",
+    "digit": "Digit {{n}} of {{total}}",
+    "send": "Send code",
+    "verify": "Verify",
+    "resend": "Resend code",
+    "resendIn": "Resend in {{seconds}} s",
+    "sent": "Code sent to {{to}}",
+    "verified": "Verified",
+    "wrong": "That code is not right. Try again."
+  },
+  "steps": {
+    "done": "done",
+    "current": "current step",
+    "locked": "not available yet",
+    "progress": "Step {{current}} of {{total}}"
+  }
+}
