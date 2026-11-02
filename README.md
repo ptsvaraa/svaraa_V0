@@ -7,7 +7,9 @@ Rules for people and AI tools: [`CLAUDE.md`](CLAUDE.md). Plan: [`docs/frontend-p
 
 ```bash
 npm install
-npm run web      # or: npm run ios / npm run android
+npm start        # Expo Go (scan the QR code)
+npm run web      # browser
+npm run start:dev # development build (after an EAS development build)
 ```
 
 The first screen is the component demo (`app/(dev)/components.tsx`): every component, in both themes and both languages.

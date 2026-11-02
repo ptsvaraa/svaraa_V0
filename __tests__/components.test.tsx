@@ -3,7 +3,18 @@ import { jest } from '@jest/globals';
 import { useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useSettings } from '@/features/settings/store';
-import { AttentionCard, Button, Chip, Input, OTPInput, Sheet, Steps, ThemeProvider, createTheme } from '@/ui';
+import {
+  AttentionCard,
+  Button,
+  Chip,
+  Input,
+  OTPInput,
+  Sheet,
+  Steps,
+  Tabs,
+  ThemeProvider,
+  createTheme,
+} from '@/ui';
 
 const metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -105,5 +116,25 @@ describe('Sheet', () => {
     expect(screen.getByText('Sheet title')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Close' }));
     expect(onClose).toHaveBeenCalled();
+  });
+});
+
+describe('Tabs', () => {
+  it('marks the selected tab and reports a change', async () => {
+    const onChange = jest.fn();
+    await wrap(
+      <Tabs
+        value="a"
+        onChange={onChange}
+        tabs={[
+          { id: 'a', label: 'Today' },
+          { id: 'b', label: 'People' },
+        ]}
+      />,
+    );
+    expect(screen.getByRole('tab', { name: 'Today', selected: true })).toBeTruthy();
+    expect(screen.getByRole('tab', { name: 'People', selected: false })).toBeTruthy();
+    await fireEvent.press(screen.getByRole('tab', { name: 'People' }));
+    expect(onChange).toHaveBeenCalledWith('b');
   });
 });

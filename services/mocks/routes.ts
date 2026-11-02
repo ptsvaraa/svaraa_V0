@@ -27,7 +27,7 @@ export const routes: MockRoute[] = [
       const { code } = (body ?? {}) as Partial<components['schemas']['OtpVerifyRequest']>;
       return code === DEMO_CODE
         ? { status: 200, body: { token: 'mock-token', role: 'caregiver' } }
-        : { status: 400, body: { message: 'Wrong code' } };
+        : { status: 400, body: { code: 'AUTH_OTP_INVALID', message: 'Wrong code' } };
     },
   },
   {

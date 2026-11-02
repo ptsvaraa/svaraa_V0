@@ -103,6 +103,11 @@ export interface components {
             status: "connected" | "not_connected" | "low_battery";
         };
         Error: {
+            /**
+             * @description Stable machine code. The app maps it to translated text; `message` is for logs only.
+             * @enum {string}
+             */
+            code: "AUTH_PHONE_INVALID" | "AUTH_OTP_INVALID" | "AUTH_OTP_EXPIRED" | "AUTH_OTP_RATE_LIMITED" | "AUTH_UNAUTHORIZED" | "NOT_FOUND" | "SERVER_ERROR";
             message: string;
         };
     };
@@ -160,8 +165,17 @@ export interface operations {
                     "application/json": components["schemas"]["Session"];
                 };
             };
-            /** @description Wrong code */
+            /** @description Wrong or expired code */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many tries */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };

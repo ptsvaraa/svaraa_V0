@@ -9,5 +9,6 @@ export { Card, AttentionCard } from './Card';
 export { Chip, type ChipTone } from './Chip';
 export { Steps, type Step } from './Steps';
 export { Sheet } from './Sheet';
+export { Tabs, type TabItem } from './Tabs';
 export { LanguageSwitch } from './LanguageSwitch';
 export { fontAssets, fontFamily } from './fonts';

@@ -13,6 +13,7 @@ import {
   OTPInput,
   Sheet,
   Steps,
+  Tabs,
   Text,
   useTheme,
   type ThemeMode,
@@ -82,6 +83,7 @@ export default function ComponentsDemo() {
   const [code, setCode] = useState('');
   const [current, setCurrent] = useState('household');
   const [sheet, setSheet] = useState(false);
+  const [tab, setTab] = useState('today');
 
   const steps = [
     { id: 'account', label: t('demo.steps.account'), done: true },
@@ -194,6 +196,18 @@ export default function ComponentsDemo() {
 
       <Section title={t('demo.section.steps')}>
         <Steps steps={steps} currentId={current} onSelect={setCurrent} />
+      </Section>
+
+      <Section title={t('demo.section.tabs')}>
+        <Tabs
+          value={tab}
+          onChange={setTab}
+          tabs={[
+            { id: 'today', label: t('demo.tabs.today') },
+            { id: 'people', label: t('demo.tabs.people') },
+            { id: 'settings', label: t('demo.tabs.settings') },
+          ]}
+        />
       </Section>
 
       <Section title={t('demo.section.sheet')}>

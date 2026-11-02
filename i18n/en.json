@@ -22,7 +22,8 @@
       "cards": "Cards",
       "chips": "Chips",
       "steps": "Steps",
-      "sheet": "Sheet"
+      "sheet": "Sheet",
+      "tabs": "Tabs"
     },
     "theme": {
       "caregiver": "Caregiver",
@@ -69,7 +70,12 @@
       "title": "Add a contact",
       "body": "They will get an alert if you press SOS."
     },
-    "headlineAccent": "Life, on their terms."
+    "headlineAccent": "Life, on their terms.",
+    "tabs": {
+      "today": "Today",
+      "people": "People",
+      "settings": "Settings"
+    }
   },
   "otp": {
     "label": "Verification code",
@@ -87,5 +93,16 @@
     "current": "current step",
     "locked": "not available yet",
     "progress": "Step {{current}} of {{total}}"
+  },
+  "errors": {
+    "AUTH_PHONE_INVALID": "That phone number is not valid. Check it and try again.",
+    "AUTH_OTP_INVALID": "That code is not right. Try again.",
+    "AUTH_OTP_EXPIRED": "That code has expired. Ask for a new one.",
+    "AUTH_OTP_RATE_LIMITED": "Too many tries. Wait a little and try again.",
+    "AUTH_UNAUTHORIZED": "Please sign in again.",
+    "NOT_FOUND": "We could not find that.",
+    "SERVER_ERROR": "Something went wrong on our side. Try again in a moment.",
+    "NETWORK_ERROR": "No connection. Check your internet and try again.",
+    "UNKNOWN": "Something went wrong. Try again."
   }
 }
