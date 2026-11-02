@@ -1,0 +1,122 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Svaraa API (sample)",
+    "version": "0.1.0",
+    "description": "Sample spec used until the backend publishes /openapi.json. Replace this file and run `npm run api:generate`."
+  },
+  "paths": {
+    "/auth/otp/send": {
+      "post": {
+        "operationId": "sendOtp",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OtpSendRequest" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Code sent",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/OtpSendResponse" } }
+            }
+          }
+        }
+      }
+    },
+    "/auth/otp/verify": {
+      "post": {
+        "operationId": "verifyOtp",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OtpVerifyRequest" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Verified",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Session" } } }
+          },
+          "400": {
+            "description": "Wrong code",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "operationId": "getMe",
+        "responses": {
+          "200": {
+            "description": "Signed-in person",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Me" } } }
+          }
+        }
+      }
+    },
+    "/circles": {
+      "get": {
+        "operationId": "listCircles",
+        "responses": {
+          "200": {
+            "description": "Circles the person belongs to",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Circle" } }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OtpSendRequest": {
+        "type": "object",
+        "required": ["phone"],
+        "properties": { "phone": { "type": "string", "example": "+919876543210" } }
+      },
+      "OtpSendResponse": {
+        "type": "object",
+        "required": ["cooldownSec"],
+        "properties": { "cooldownSec": { "type": "integer", "example": 30 } }
+      },
+      "OtpVerifyRequest": {
+        "type": "object",
+        "required": ["phone", "code"],
+        "properties": { "phone": { "type": "string" }, "code": { "type": "string", "example": "000000" } }
+      },
+      "Session": {
+        "type": "object",
+        "required": ["token", "role"],
+        "properties": {
+          "token": { "type": "string" },
+          "role": { "type": "string", "enum": ["caretaker", "wearer"] }
+        }
+      },
+      "Me": {
+        "type": "object",
+        "required": ["id", "name", "role"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "role": { "type": "string", "enum": ["caretaker", "wearer"] }
+        }
+      },
+      "Circle": {
+        "type": "object",
+        "required": ["id", "name", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "status": { "type": "string", "enum": ["connected", "not_connected", "low_battery"] }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["message"],
+        "properties": { "message": { "type": "string" } }
+      }
+    }
+  }
+}
