@@ -196,3 +196,11 @@ export function claimDevice(householdId: string, code: string): DeviceOut | 'dev
 export const mockSetupOf = (householdId: string) => db.setup.get(householdId);
 export const mockDevicesOf = (householdId: string) =>
   [...db.claimed.values()].filter((d) => d.householdId === householdId).map(withoutHousehold);
+
+/** PENDING BACKEND: a device of this household, by id. */
+export function deviceOf(
+  householdId: string,
+  deviceId: string,
+): (DeviceOut & { householdId: string }) | undefined {
+  return [...db.claimed.values()].find((d) => d.householdId === householdId && d.id === deviceId);
+}

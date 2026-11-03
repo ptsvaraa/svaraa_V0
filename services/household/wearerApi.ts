@@ -33,3 +33,37 @@ export const giveConsent = (householdId: string, via: 'app' | 'link' = 'app') =>
  */
 export const claimPendant = (householdId: string, code: string) =>
   call(api.POST('/api/v1/households/{household_id}/claim', { ...path(householdId), body: { code } }));
+
+const device = (householdId: string, deviceId: string) => ({
+  params: { path: { household_id: householdId, device_id: deviceId } },
+});
+
+/**
+ * C3: a fresh random challenge for the pendant to sign.
+ * PENDING BACKEND: POST /api/v1/households/{household_id}/devices/{device_id}/challenge is not in docs/openapi.json yet.
+ */
+export const getPairingChallenge = (householdId: string, deviceId: string) =>
+  call(
+    api.POST(
+      '/api/v1/households/{household_id}/devices/{device_id}/challenge',
+      device(householdId, deviceId),
+    ),
+  );
+
+/**
+ * C3: send the pendant's signature. The claim becomes "verified" and is locked to this household; this phone is the gateway.
+ * Fails with `invalid_device_signature` for a pendant that is not genuine.
+ * PENDING BACKEND: POST /api/v1/households/{household_id}/devices/{device_id}/activate is not in docs/openapi.json yet.
+ */
+export const activatePendant = (
+  householdId: string,
+  deviceId: string,
+  signature: string,
+  pendantId: string,
+) =>
+  call(
+    api.POST('/api/v1/households/{household_id}/devices/{device_id}/activate', {
+      ...device(householdId, deviceId),
+      body: { signature, pendant_id: pendantId },
+    }),
+  );

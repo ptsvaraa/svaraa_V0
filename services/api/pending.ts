@@ -28,6 +28,10 @@ export type ConsentIn = { version: string; via: 'app' | 'link' };
 export type ClaimIn = { code: string };
 export type ClaimState = 'unverified' | 'verified';
 export type DeviceOut = { id: string; serial: string; claim_state: ClaimState; is_owner: boolean };
+/** C3: a random challenge the pendant signs to prove it is genuine. */
+export type ChallengeOut = { challenge: string };
+/** C3: the signed challenge, and the Bluetooth id of the pendant this phone paired with (the gateway). */
+export type ActivateIn = { signature: string; pendant_id: string };
 
 type Operation<In, Out, Status extends number> = {
   parameters: NoParams;
@@ -38,13 +42,13 @@ type Operation<In, Out, Status extends number> = {
 /** Path parameters such as `{ household_id: string }`. */
 type WithPath<P> = { query?: never; header?: never; path: P; cookie?: never };
 type HouseholdPath = { household_id: string };
+type DevicePath = { household_id: string; device_id: string };
 type Empty = { headers: NoHeaders; content?: never };
 /** An operation on a path with parameters. `In = void` means no body; `Out = void` means 204 No Content. */
 type PathOperation<P, In, Out> = {
   parameters: WithPath<P>;
-  requestBody: In extends void ? never : { content: Json<In> };
   responses: Out extends void ? { 204: Empty } : { 200: { headers: NoHeaders; content: Json<Out> } };
-};
+} & ([In] extends [void] ? { requestBody?: never } : { requestBody: { content: Json<In> } });
 type NoMethods = {
   get?: never;
   put?: never;
@@ -99,5 +103,13 @@ export type PendingPaths = {
   '/api/v1/households/{household_id}/claim': PathItem<
     HouseholdPath,
     { post: PathOperation<HouseholdPath, ClaimIn, DeviceOut> }
+  >;
+  '/api/v1/households/{household_id}/devices/{device_id}/challenge': PathItem<
+    DevicePath,
+    { post: PathOperation<DevicePath, void, ChallengeOut> }
+  >;
+  '/api/v1/households/{household_id}/devices/{device_id}/activate': PathItem<
+    DevicePath,
+    { post: PathOperation<DevicePath, ActivateIn, DeviceOut> }
   >;
 };

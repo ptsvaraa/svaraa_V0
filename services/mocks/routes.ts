@@ -1,4 +1,5 @@
 import type {
+  ActivateIn,
   ClaimIn,
   ConsentIn,
   HouseholdCreateIn,
@@ -10,6 +11,7 @@ import {
   authenticate,
   claimDevice,
   createHouseholdFor,
+  deviceOf,
   householdOf,
   findOrCreateUser,
   mobileTakenBy,
@@ -319,6 +321,36 @@ export const routes: MockRoute[] = [
       if (code.endsWith(CLAIMED_CODE_SUFFIX)) return alreadyClaimed;
       const device = claimDevice(h.householdId, code);
       return device === 'device_already_claimed' ? alreadyClaimed : { status: 200, body: device };
+    },
+  },
+  // PENDING BACKEND: C3, a random challenge for the pendant to sign. Not in docs/openapi.json yet.
+  {
+    method: 'POST',
+    path: `${API}/households/{household_id}/devices/{device_id}/challenge`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      if (!deviceOf(h.householdId, ctx.params.device_id ?? ''))
+        return fail(404, 'not_found', 'Device not found');
+      return { status: 200, body: { challenge: `challenge-${ctx.params.device_id}` } };
+    },
+  },
+  // PENDING BACKEND: C3, check the signature and lock the claim to this household. Not in docs/openapi.json yet.
+  // The mock accepts the simulator's signatures ("sim:...").
+  {
+    method: 'POST',
+    path: `${API}/households/{household_id}/devices/{device_id}/activate`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      const d = deviceOf(h.householdId, ctx.params.device_id ?? '');
+      if (!d) return fail(404, 'not_found', 'Device not found');
+      const { signature, pendant_id } = (ctx.body ?? {}) as Partial<ActivateIn>;
+      if (!pendant_id || !signature?.startsWith('sim:'))
+        return fail(422, 'invalid_device_signature', 'Signature does not match');
+      d.claim_state = 'verified';
+      const { householdId: _h, ...out } = d;
+      return { status: 200, body: out };
     },
   },
 ];
