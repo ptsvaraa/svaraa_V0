@@ -25,8 +25,8 @@ export default function Intro() {
     void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
   }, []);
 
-  // Move to the next story every 3 s, and back to the first after the last. Waits while a finger is on it,
-  // and starts a fresh 3 s after any swipe. Off when the phone asks for reduced motion.
+  // Move to the next story every 2 s, and back to the first after the last. Waits while a finger is on it,
+  // and starts a fresh 2 s after any swipe. Off when the phone asks for reduced motion.
   useEffect(() => {
     if (touching || reduceMotion) return;
     const id = setTimeout(() => {
