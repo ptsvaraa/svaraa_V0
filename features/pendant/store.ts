@@ -19,3 +19,17 @@ export function usePendantStatus() {
   }, []);
   return usePendant();
 }
+
+/**
+ * Reconnect to the paired pendant (by its id) whenever it is not connected, e.g. after the app was closed.
+ * Does nothing without an id. Failures are left to the status: screens show "Not connected".
+ */
+export function useReconnect(pendantId: string | undefined) {
+  const connection = usePendant((s) => s.connection);
+  useEffect(() => {
+    if (pendantId && connection === 'disconnected')
+      void pendant()
+        .connect(pendantId)
+        .catch(() => undefined);
+  }, [pendantId, connection]);
+}

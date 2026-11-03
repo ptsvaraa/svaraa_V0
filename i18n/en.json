@@ -377,6 +377,32 @@
         "next": "Ask the owner to release it, or contact Svaraa support if you bought it second-hand.",
         "retry": "Scan another code"
       }
+    },
+    "pair": {
+      "title": "Pair your pendant",
+      "step1": "Press the gold dot once",
+      "step1Detail": "You feel one tick",
+      "step2": "Look for Svaraa Fold Over",
+      "step3": "Pair. The pendant says \"Connected\"",
+      "pressed": "I pressed the dot",
+      "retry": "Press the dot again and retry",
+      "scanning": "Looking for your pendant…",
+      "nearby": "#{{serial}} · nearby",
+      "pair": "Pair",
+      "pairing": "Pairing…",
+      "confirms": "If your phone asks, tap Pair. The pendant confirms with one tick and a spoken \"Connected\".",
+      "charging": "Charging? Place the pendant on the magnetic puck."
+    },
+    "check": {
+      "title": "Check your pendant",
+      "body": "Tick each one when it works.",
+      "touch": "I felt the tick (touch)",
+      "announce": "I heard the status announcement",
+      "mic": "I heard \"Hello\" on the microphone",
+      "again": "Again",
+      "againFor": "Again: {{check}}",
+      "finish": "Finish pairing",
+      "repair": "Pair again"
     }
   },
   "languages": {
@@ -385,5 +411,9 @@
     "ta": "Tamil",
     "gu": "Gujarati",
     "bn": "Bengali"
+  },
+  "pendant": {
+    "connected": "Pendant connected",
+    "notConnected": "Pendant not connected"
   }
 }

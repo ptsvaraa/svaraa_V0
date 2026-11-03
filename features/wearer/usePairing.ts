@@ -1,0 +1,77 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useHousehold } from '@/features/household/store';
+import { activatePendant, getPairingChallenge } from '@/services/household/wearerApi';
+import { pendant, type FoundPendant } from '@/services/pendant';
+import { useWearer } from './store';
+
+export type PairingPhase = 'ready' | 'scanning' | 'found' | 'pairing' | 'paired' | 'failed';
+
+/** How long to look for a pendant in pairing mode before saying it was not found. */
+export const SCAN_TIMEOUT_MS = 20_000;
+
+/**
+ * C3 · Pairing, step by step: scan for a pendant whose dot was pressed, connect (the OS shows a plain Pair prompt;
+ * the pendant ticks and says "Connected"), then the silent check: the server sends a challenge, the pendant signs it,
+ * and the server locks the claim to this household. This phone becomes the gateway.
+ */
+export function usePairing() {
+  const [phase, setPhaseState] = useState<PairingPhase>('ready');
+  const phaseRef = useRef<PairingPhase>('ready');
+  const setPhase = useCallback((p: PairingPhase) => {
+    phaseRef.current = p;
+    setPhaseState(p);
+  }, []);
+  const [found, setFound] = useState<FoundPendant[]>([]);
+  const [error, setError] = useState<unknown>(null);
+  const stopScan = useRef<(() => void) | null>(null);
+
+  useEffect(() => () => stopScan.current?.(), []);
+
+  const scan = useCallback(() => {
+    stopScan.current?.();
+    setError(null);
+    setFound([]);
+    setPhase('scanning');
+    stopScan.current = pendant().scan(
+      (p) => {
+        setFound((list) => (list.some((f) => f.id === p.id) ? list : [...list, p]));
+        if (phaseRef.current === 'scanning') setPhase('found');
+      },
+      {
+        timeoutMs: SCAN_TIMEOUT_MS,
+        onTimeout: () => {
+          if (phaseRef.current !== 'scanning') return;
+          setError({ code: 'pendant_not_found' });
+          setPhase('failed');
+        },
+      },
+    );
+  }, [setPhase]);
+
+  const pair = useCallback(
+    async (p: FoundPendant) => {
+      stopScan.current?.();
+      stopScan.current = null;
+      setError(null);
+      setPhase('pairing');
+      try {
+        const householdId = useHousehold.getState().householdId;
+        const device = useWearer.getState().device;
+        if (!householdId || !device) throw new Error('Claim the pendant first (C2)');
+        const t = pendant();
+        await t.connect(p.id);
+        const { challenge } = await getPairingChallenge(householdId, device.id);
+        const signature = await t.signChallenge(challenge);
+        const verified = await activatePendant(householdId, device.id, signature, p.id);
+        await useWearer.getState().save({ device: verified, pendantId: p.id });
+        setPhase('paired');
+      } catch (e) {
+        setError(e);
+        setPhase('failed');
+      }
+    },
+    [setPhase],
+  );
+
+  return { phase, found, error, scan, pair };
+}
