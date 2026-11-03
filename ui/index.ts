@@ -9,6 +9,7 @@ export { Card, AttentionCard } from './Card';
 export { Chip, type ChipTone } from './Chip';
 export { Steps, type Step } from './Steps';
 export { Sheet } from './Sheet';
+export { Logo } from './Logo';
 export { Choice } from './Choice';
 export { Screen } from './Screen';
 export { ListRow } from './ListRow';

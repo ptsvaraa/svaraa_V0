@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useErrorText } from '@/features/auth/useErrorText';
 import { getGoogleCredential, signInWithGoogleToken } from '@/services/auth/authApi';
-import { Button, LanguageSwitch, Screen, Text, useTheme } from '@/ui';
+import { Button, LanguageSwitch, Logo, Screen, Text, useTheme } from '@/ui';
 
 /** A1 · Welcome and sign in. */
 export default function Welcome() {
@@ -63,11 +63,7 @@ export default function Welcome() {
           minHeight: 320,
         }}
       >
-        <Image
-          source={require('../../assets/icon.png')}
-          accessibilityLabel={t('auth.welcome.logo')}
-          style={{ width: 84, height: 84, borderRadius: theme.radius.xl }}
-        />
+        <Logo height={72} />
         <Text variant="title1" tone="heading" accessibilityRole="header" style={{ textAlign: 'center' }}>
           {t('auth.welcome.title')}
         </Text>

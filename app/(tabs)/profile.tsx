@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useSettings, type SchemePreference } from '@/features/settings/store';
 import { logout } from '@/services/auth/authApi';
 import { useSession } from '@/services/auth/session';
-import { Button, Card, Choice, LanguageSwitch, ListRow, Screen, Text, useTheme, type ThemeMode } from '@/ui';
+import { Button, Card, Choice, LanguageSwitch, ListRow, Screen, Text, useTheme } from '@/ui';
 
 /** Profile tab: account, display settings (theme and language) and sign out. */
 export default function Profile() {
@@ -13,7 +13,7 @@ export default function Profile() {
   const { t } = useTranslation();
   const router = useRouter();
   const { method, mobile } = useSession();
-  const { themeMode, scheme, setThemeMode, setScheme } = useSettings();
+  const { scheme, setScheme } = useSettings();
   const [busy, setBusy] = useState(false);
 
   return (
@@ -43,20 +43,6 @@ export default function Profile() {
             {t('profile.language')}
           </Text>
           <LanguageSwitch />
-        </View>
-        <View style={{ gap: theme.space[2] }}>
-          <Text variant="label" tone="secondary">
-            {t('profile.mode')}
-          </Text>
-          <Choice<ThemeMode>
-            label={t('profile.mode')}
-            value={themeMode}
-            onChange={setThemeMode}
-            options={[
-              { id: 'caregiver', label: t('demo.theme.caregiver') },
-              { id: 'wearer', label: t('demo.theme.wearer') },
-            ]}
-          />
         </View>
         <View style={{ gap: theme.space[2] }}>
           <Text variant="label" tone="secondary">
