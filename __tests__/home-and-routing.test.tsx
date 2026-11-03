@@ -138,6 +138,14 @@ describe('Home (A4)', () => {
     expect(screen.queryByText('Finish setting up Svaraa')).toBeNull();
   });
 
+  it('shows the product (the pendant) and opens Explore', async () => {
+    await renderApp(<Home />);
+    expect(screen.getByText('Svaraa Fold')).toBeTruthy();
+    expect(screen.getByLabelText('Svaraa Fold pendant worn on its braided cord')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: /Svaraa Fold\./ }));
+    expect(mockPush).toHaveBeenCalledWith('/explore');
+  });
+
   it('is in Hindi when the language is Hindi', async () => {
     await i18n.changeLanguage('hi');
     await renderApp(<Home />);

@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useGreetingName } from '@/features/home/useGreetingName';
@@ -39,10 +39,35 @@ export default function Home() {
         </>
       )}
 
-      <View
-        accessibilityLabel={t('home.story')}
-        style={{ height: 90, borderRadius: theme.radius.xl, backgroundColor: theme.colors.sunken }}
-      />
+      {/* Product story: the pendant, from the marketing site. Opens Explore. */}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${t('home.product.name')}. ${t('home.product.body')}`}
+        onPress={() => router.navigate('/explore')}
+        style={{
+          borderRadius: theme.radius.xl,
+          overflow: 'hidden',
+          borderWidth: 1,
+          borderColor: theme.colors.borderSubtle,
+          backgroundColor: theme.colors.surfaceSolid,
+        }}
+      >
+        <Image
+          source={require('../../assets/story/pendant.webp')}
+          accessibilityRole="image"
+          accessibilityLabel={t('home.product.alt')}
+          resizeMode="cover"
+          style={{ width: '100%', aspectRatio: 725 / 394, backgroundColor: theme.colors.sunken }}
+        />
+        <View style={{ padding: theme.space[4], gap: theme.space[1] }}>
+          <Text variant="heading" tone="heading">
+            {t('home.product.name')}
+          </Text>
+          <Text variant="bodySm" tone="secondary">
+            {t('home.product.body')}
+          </Text>
+        </View>
+      </Pressable>
       <ListRow title={t('home.explore')} onPress={() => router.navigate('/explore')} />
       <ListRow title={t('home.buying')} onPress={() => router.navigate('/explore')} />
     </Screen>
