@@ -19,7 +19,24 @@ export async function verifyOtpAndSignIn(p: PhoneNumber, code: string): Promise<
 export async function signInWithGoogleToken(idToken: string, name?: string): Promise<{ isNew: boolean }> {
   const out = await call(api.POST('/api/v1/auth/google', { body: { id_token: idToken } }));
   await useSession.getState().signIn(out, { method: 'google', googleName: name });
+  await saveGoogleName(name);
   return { isNew: out.is_new };
+}
+
+/**
+ * After Google sign-in, save the name Google gave us as the profile name, but only if the profile has none.
+ * A name the person already saved is never overwritten. Best effort: if this fails, sign-in still succeeds
+ * and the greeting falls back to the Google name kept on the phone.
+ */
+async function saveGoogleName(name?: string): Promise<void> {
+  const googleName = name?.trim();
+  if (!googleName) return;
+  try {
+    const profile = await getProfile();
+    if (!profile.display_name?.trim()) await updateProfile({ display_name: googleName });
+  } catch {
+    /* ignore: see above */
+  }
 }
 
 /** Add a mobile number to a Google account: send the code, then confirm it. */

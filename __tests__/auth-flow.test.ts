@@ -13,7 +13,7 @@ import {
 import { useSession } from '@/services/auth/session';
 import { resetMockDb } from '@/services/mocks/db';
 import { DEMO_CODE } from '@/services/mocks/routes';
-import { calls, INDIA, useMockBackend } from '@/test-utils/backend';
+import { calls, INDIA, requests, useMockBackend } from '@/test-utils/backend';
 import { refreshAccessToken } from '@/services/api/authedFetch';
 
 const code = (p: Promise<unknown>) =>
@@ -87,6 +87,37 @@ describe('Google sign-in and adding a phone', () => {
   it('keeps the name Google gives, for the greeting', async () => {
     await signInWithGoogleToken('some-token', 'Meera Rao');
     expect(useSession.getState().googleName).toBe('Meera Rao');
+  });
+
+  it('saves the Google name as the profile name (PATCH /users/me) when the profile has none', async () => {
+    await signInWithGoogleToken('some-token', 'Meera Rao');
+    expect(calls('/api/v1/users/me')).toBe(2); // GET, then PATCH
+    expect(requests.some((r) => r.method === 'PATCH' && r.path === '/api/v1/users/me')).toBe(true);
+    expect(await getProfile()).toMatchObject({ display_name: 'Meera Rao', profile_status: 'completed' });
+  });
+
+  it('does not overwrite a name the person already saved', async () => {
+    await signInWithGoogleToken('some-token', 'Meera Rao');
+    await updateProfile({ display_name: 'Meera' });
+    await signInWithGoogleToken('some-token', 'Meera Rao'); // signs in again, same account
+    expect((await getProfile()).display_name).toBe('Meera');
+  });
+
+  it('does not touch the profile when Google gives no name', async () => {
+    await signInWithGoogleToken('some-token');
+    expect(calls('/api/v1/users/me')).toBe(0);
+  });
+
+  it('still signs in when saving the name fails', async () => {
+    const real = globalThis.fetch;
+    globalThis.fetch = (async (input, init) => {
+      // Clone to read the URL without using up the request body.
+      const url = input instanceof Request ? input.clone().url : String(input);
+      if (new URL(url).pathname === '/api/v1/users/me') throw new TypeError('offline');
+      return real(input, init);
+    }) as typeof fetch;
+    await expect(signInWithGoogleToken('some-token', 'Meera Rao')).resolves.toMatchObject({ isNew: true });
+    expect(useSession.getState().status).toBe('signedIn');
   });
 
   it('asks a new Google user for a phone even after an earlier mock user added one and the app reloaded', async () => {
