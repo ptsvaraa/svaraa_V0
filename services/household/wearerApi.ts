@@ -92,3 +92,21 @@ export const saveContacts = (householdId: string, contacts: ContactIn[]) =>
  */
 export const createInvite = (householdId: string, role: InviteRole) =>
   call(api.POST('/api/v1/households/{household_id}/invites', { ...path(householdId), body: { role } }));
+
+/**
+ * C8: start an SOS drill. Contacts get alerts marked DRILL.
+ * PENDING BACKEND: POST /api/v1/households/{household_id}/drills is not in docs/openapi.json yet.
+ */
+export const startDrill = (householdId: string) =>
+  call(api.POST('/api/v1/households/{household_id}/drills', path(householdId)));
+
+/**
+ * C8: how the drill is going. Ask again every few seconds while it is "waiting".
+ * PENDING BACKEND: GET /api/v1/households/{household_id}/drills/{drill_id} is not in docs/openapi.json yet.
+ */
+export const getDrill = (householdId: string, drillId: string) =>
+  call(
+    api.GET('/api/v1/households/{household_id}/drills/{drill_id}', {
+      params: { path: { household_id: householdId, drill_id: drillId } },
+    }),
+  );

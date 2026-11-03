@@ -47,6 +47,17 @@ export type ContactsOut = ContactsIn;
 export type InviteRole = 'admin' | 'viewer';
 export type InviteIn = { role: InviteRole };
 export type InviteOut = { code: string; url: string; role: InviteRole; expires_at: string };
+/** C8: an SOS drill. Alerts go to the emergency contacts marked DRILL; it passes when one of them answers. */
+export type DrillStatus = 'waiting' | 'passed' | 'expired';
+export type DrillOut = {
+  id: string;
+  status: DrillStatus;
+  started_at: string;
+  /** The drill fails if nobody answers by then (five minutes after the start). */
+  expires_at: string;
+  /** Name of the contact who answered, once passed. */
+  acknowledged_by?: string | null;
+};
 
 type Operation<In, Out, Status extends number> = {
   parameters: NoParams;
@@ -58,6 +69,7 @@ type Operation<In, Out, Status extends number> = {
 type WithPath<P> = { query?: never; header?: never; path: P; cookie?: never };
 type HouseholdPath = { household_id: string };
 type DevicePath = { household_id: string; device_id: string };
+type DrillPath = { household_id: string; drill_id: string };
 type Empty = { headers: NoHeaders; content?: never };
 /** An operation on a path with parameters. `In = void` means no body; `Out = void` means 204 No Content. */
 type PathOperation<P, In, Out> = {
@@ -126,6 +138,14 @@ export type PendingPaths = {
   '/api/v1/households/{household_id}/invites': PathItem<
     HouseholdPath,
     { post: PathOperation<HouseholdPath, InviteIn, InviteOut> }
+  >;
+  '/api/v1/households/{household_id}/drills': PathItem<
+    HouseholdPath,
+    { post: PathOperation<HouseholdPath, void, DrillOut> }
+  >;
+  '/api/v1/households/{household_id}/drills/{drill_id}': PathItem<
+    DrillPath,
+    { get: PathOperation<DrillPath, void, DrillOut> }
   >;
   '/api/v1/households/{household_id}/devices/{device_id}/challenge': PathItem<
     DevicePath,

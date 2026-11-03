@@ -5,6 +5,7 @@ import type {
   PushTokenIn,
   Role,
   ContactIn,
+  DrillOut,
   InviteOut,
   WearerProfileIn,
 } from '@/services/api/pending';
@@ -42,6 +43,7 @@ export type HouseholdSetup = {
   contacts: ContactIn[];
   /** Open invites; creating a new one cancels the others. */
   invites: InviteOut[];
+  drills: DrillOut[];
 };
 
 const fresh = (): Db => ({
@@ -175,7 +177,7 @@ export function householdOf(userId: string, householdId: string): HouseholdOut |
 export function setupOf(householdId: string): HouseholdSetup {
   let s = db.setup.get(householdId);
   if (!s) {
-    s = { consents: [], contacts: [], invites: [] };
+    s = { consents: [], contacts: [], invites: [], drills: [] };
     db.setup.set(householdId, s);
   }
   return s;
@@ -215,4 +217,34 @@ export function newInviteCode(): string {
   const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const n = ++db.counter;
   return `SVR-${Array.from({ length: 4 }, (_, i) => letters[(n * 7 + i * 13) % letters.length]).join('')}`;
+}
+
+/** Mock timing for the SOS drill. The first contact "answers" after `ackMs`. Tests change these. */
+export const mockDrillTiming = { ackMs: 6000, timeoutMs: 5 * 60_000 };
+
+/** PENDING BACKEND: start a drill for this household. */
+export function startDrillFor(householdId: string, now = Date.now()): DrillOut {
+  const drill: DrillOut = {
+    id: uuid(++db.counter),
+    status: 'waiting',
+    started_at: new Date(now).toISOString(),
+    expires_at: new Date(now + mockDrillTiming.timeoutMs).toISOString(),
+    acknowledged_by: null,
+  };
+  setupOf(householdId).drills.push(drill);
+  return drill;
+}
+
+/** PENDING BACKEND: a drill as it stands now. With no contacts nobody can answer, so it runs out. */
+export function drillNow(householdId: string, drillId: string, now = Date.now()): DrillOut | undefined {
+  const s = setupOf(householdId);
+  const d = s.drills.find((x) => x.id === drillId);
+  if (!d || d.status !== 'waiting') return d;
+  const started = Date.parse(d.started_at);
+  const first = s.contacts[0];
+  if (first && now - started >= mockDrillTiming.ackMs) {
+    d.status = 'passed';
+    d.acknowledged_by = first.name;
+  } else if (now >= Date.parse(d.expires_at)) d.status = 'expired';
+  return d;
 }

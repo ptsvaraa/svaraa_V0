@@ -3,6 +3,7 @@ import type {
   ClaimIn,
   ConsentIn,
   ContactsIn,
+  DrillOut,
   HouseholdCreateIn,
   InviteIn,
   InviteOut,
@@ -15,6 +16,7 @@ import {
   claimDevice,
   createHouseholdFor,
   deviceOf,
+  drillNow,
   householdOf,
   newInviteCode,
   findOrCreateUser,
@@ -25,6 +27,7 @@ import {
   revokeSession,
   savePushTokenFor,
   setupOf,
+  startDrillFor,
   type MockUser,
 } from './db';
 
@@ -399,6 +402,27 @@ export const routes: MockRoute[] = [
       };
       setupOf(h.householdId).invites = [invite];
       return { status: 200, body: invite };
+    },
+  },
+  // PENDING BACKEND: C8, start an SOS drill. Not in docs/openapi.json yet.
+  {
+    method: 'POST',
+    path: `${API}/households/{household_id}/drills`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      return { status: 200, body: startDrillFor(h.householdId) satisfies DrillOut };
+    },
+  },
+  // PENDING BACKEND: C8, the drill's status. Not in docs/openapi.json yet.
+  {
+    method: 'GET',
+    path: `${API}/households/{household_id}/drills/{drill_id}`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      const d = drillNow(h.householdId, ctx.params.drill_id ?? '');
+      return d ? { status: 200, body: d } : fail(404, 'drill_not_found', 'Drill not found');
     },
   },
 ];
