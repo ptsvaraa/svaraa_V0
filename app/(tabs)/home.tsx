@@ -1,13 +1,12 @@
-import { Image, Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useGreetingName } from '@/features/home/useGreetingName';
+import { ProductCard } from '@/features/home/ProductCard';
 import { useHousehold } from '@/features/household/store';
-import { AttentionCard, ListRow, Screen, Text, useTheme } from '@/ui';
+import { AttentionCard, ListRow, Screen, Text } from '@/ui';
 
 /** A4 · Home before setup. The setup card stays until a pendant is Active, and resumes where the person left off. */
 export default function Home() {
-  const theme = useTheme();
   const { t } = useTranslation();
   const router = useRouter();
   const name = useGreetingName();
@@ -40,43 +39,7 @@ export default function Home() {
       )}
 
       {/* Product story: the pendant, from the marketing site. Opens Explore. */}
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`${t('home.product.name')}. ${t('home.product.body')}`}
-        onPress={() => router.navigate('/explore')}
-        style={{
-          flexShrink: 0,
-          alignSelf: 'center',
-          width: '100%',
-          maxWidth: 420,
-          borderRadius: theme.radius.xl,
-          overflow: 'hidden',
-          borderWidth: 1,
-          borderColor: theme.colors.borderSubtle,
-          backgroundColor: theme.colors.surfaceSolid,
-        }}
-      >
-        <Image
-          source={require('../../assets/story/pendant.webp')}
-          accessibilityRole="image"
-          accessibilityLabel={t('home.product.alt')}
-          resizeMode="cover"
-          style={{
-            width: '100%',
-            aspectRatio: 725 / 394,
-            flexShrink: 0,
-            backgroundColor: theme.colors.sunken,
-          }}
-        />
-        <View style={{ padding: theme.space[4], gap: theme.space[1] }}>
-          <Text variant="heading" tone="heading">
-            {t('home.product.name')}
-          </Text>
-          <Text variant="bodySm" tone="secondary">
-            {t('home.product.body')}
-          </Text>
-        </View>
-      </Pressable>
+      <ProductCard onPress={() => router.navigate('/explore')} />
       <ListRow title={t('home.explore')} onPress={() => router.navigate('/explore')} />
       <ListRow title={t('home.buying')} onPress={() => router.navigate('/explore')} />
     </Screen>
