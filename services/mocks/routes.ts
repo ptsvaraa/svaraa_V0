@@ -1,12 +1,15 @@
+import type { HouseholdCreateIn, PushTokenIn } from '@/services/api/pending';
 import type { components } from '@/services/api/schema';
 import {
   authenticate,
+  createHouseholdFor,
   findOrCreateUser,
   mobileTakenBy,
   openSession,
   otpOnCooldown,
   refreshAccess,
   revokeSession,
+  savePushTokenFor,
 } from './db';
 
 /** Demo code accepted by the mock backend (the real dev backend also uses it). */
@@ -184,6 +187,32 @@ export const routes: MockRoute[] = [
       if ('code' in auth) return fail(401, auth.code, 'Invalid or expired token');
       if (auth.user.profile_status === 'pending') auth.user.profile_status = 'skipped';
       return { status: 200, body: toProfile(auth.user) };
+    },
+  },
+  // PENDING BACKEND: create the household with the person's role. Not in docs/openapi.json yet.
+  {
+    method: 'POST',
+    path: `${API}/households`,
+    respond: ({ body, headers }) => {
+      const auth = authenticate(headers);
+      if ('code' in auth) return fail(401, auth.code, 'Invalid or expired token');
+      const role = (body as Partial<HouseholdCreateIn> | undefined)?.role;
+      if (role !== 'wearer' && role !== 'caregiver') return fail(422, 'validation_error', 'Invalid request');
+      return { status: 200, body: createHouseholdFor(auth.user.id, role) };
+    },
+  },
+  // PENDING BACKEND: save this phone's push token. Not in docs/openapi.json yet.
+  {
+    method: 'POST',
+    path: `${API}/devices/push-token`,
+    respond: ({ body, headers }) => {
+      const auth = authenticate(headers);
+      if ('code' in auth) return fail(401, auth.code, 'Invalid or expired token');
+      const { token, platform } = (body ?? {}) as Partial<PushTokenIn>;
+      if (!token || !platform || !['ios', 'android', 'web'].includes(platform))
+        return fail(422, 'validation_error', 'Invalid request');
+      savePushTokenFor(auth.user.id, { token, platform });
+      return NO_CONTENT;
     },
   },
 ];

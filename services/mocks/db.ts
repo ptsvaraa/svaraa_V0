@@ -1,3 +1,4 @@
+import type { HouseholdOut, PushTokenIn, Role } from '@/services/api/pending';
 import type { components } from '@/services/api/schema';
 
 type Profile = components['schemas']['ProfileOut'];
@@ -15,6 +16,10 @@ type Db = {
   /** refresh token -> { user id, revoked } */
   refresh: Map<string, { userId: string; revoked: boolean }>;
   otpAskedAt: Map<string, number>;
+  /** PENDING BACKEND: user id -> household (one per user for now). */
+  households: Map<string, HouseholdOut>;
+  /** PENDING BACKEND: user id -> saved push tokens. */
+  pushTokens: Map<string, PushTokenIn[]>;
 };
 
 const fresh = (): Db => ({
@@ -23,6 +28,8 @@ const fresh = (): Db => ({
   access: new Map(),
   refresh: new Map(),
   otpAskedAt: new Map(),
+  households: new Map(),
+  pushTokens: new Map(),
 });
 let db = fresh();
 
@@ -113,3 +120,23 @@ export function otpOnCooldown(number: string, now = Date.now()): boolean {
 export function mobileTakenBy(number: string, userId: string): boolean {
   return [...db.users.values()].some((u) => u.mobile === number && u.id !== userId);
 }
+
+/** PENDING BACKEND: the user's household. Asking again returns the same one (the role is not changed). */
+export function createHouseholdFor(userId: string, role: Role): HouseholdOut {
+  const found = db.households.get(userId);
+  if (found) return found;
+  const created: HouseholdOut = { id: uuid(++db.counter), role };
+  db.households.set(userId, created);
+  return created;
+}
+
+/** PENDING BACKEND: remember a push token for this user (the same token is kept once). */
+export function savePushTokenFor(userId: string, entry: PushTokenIn): void {
+  const list = db.pushTokens.get(userId) ?? [];
+  if (!list.some((t) => t.token === entry.token)) list.push(entry);
+  db.pushTokens.set(userId, list);
+}
+
+/** For tests: what the mock backend holds for this user. */
+export const mockHouseholdOf = (userId: string) => db.households.get(userId);
+export const mockPushTokensOf = (userId: string) => db.pushTokens.get(userId) ?? [];
