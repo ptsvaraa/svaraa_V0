@@ -1,0 +1,59 @@
+import type { ReactNode } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from './ThemeProvider';
+
+/**
+ * Page frame: safe areas, scrolling, standard padding, and a readable width on wide screens.
+ * `footer` stays pinned at the bottom (primary buttons).
+ */
+export function Screen({
+  children,
+  footer,
+  bottomInset = true,
+}: {
+  children: ReactNode;
+  footer?: ReactNode;
+  /** Set false when a tab bar already covers the bottom edge. */
+  bottomInset?: boolean;
+}) {
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: theme.colors.canvas }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{
+          flexGrow: 1,
+          padding: theme.space[5],
+          paddingTop: theme.space[5] + insets.top,
+          paddingBottom: theme.space[5] + (footer || !bottomInset ? 0 : insets.bottom),
+          gap: theme.space[4],
+          maxWidth: 520,
+          width: '100%',
+          alignSelf: 'center',
+        }}
+      >
+        {children}
+      </ScrollView>
+      {footer ? (
+        <View
+          style={{
+            paddingHorizontal: theme.space[5],
+            paddingTop: theme.space[3],
+            paddingBottom: theme.space[4] + (bottomInset ? insets.bottom : 0),
+            gap: theme.space[3],
+            maxWidth: 520,
+            width: '100%',
+            alignSelf: 'center',
+          }}
+        >
+          {footer}
+        </View>
+      ) : null}
+    </KeyboardAvoidingView>
+  );
+}

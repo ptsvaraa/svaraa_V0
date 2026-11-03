@@ -64,7 +64,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "i18n:check": "tsx scripts/i18n-check.ts",
-    "api:generate": "openapi-typescript services/api/openapi.json -o services/api/schema.d.ts",
+    "api:generate": "openapi-typescript docs/openapi.json -o services/api/schema.d.ts",
     "build:web": "expo export --platform web",
     "prepare": "husky",
     "check": "npm run lint && npm run typecheck && npm test && npm run i18n:check",

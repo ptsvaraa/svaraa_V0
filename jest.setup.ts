@@ -7,5 +7,7 @@ jest.mock('expo-secure-store', () => {
     getItemAsync: async (k: string) => store.get(k) ?? null,
     setItemAsync: async (k: string, v: string) => void store.set(k, v),
     deleteItemAsync: async (k: string) => void store.delete(k),
+    /** Tests only: forget everything saved. */
+    __reset: () => store.clear(),
   };
 });

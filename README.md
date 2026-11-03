@@ -35,4 +35,6 @@ npm run lint && npm run typecheck && npm test && npm run i18n:check && npm run b
 
 ## API client
 
-`services/api/openapi.json` is a sample spec. When the backend publishes `/openapi.json`, replace the file and run `npm run api:generate`.
+The client is generated from `docs/openapi.json` (the real backend). When the backend changes, replace that file and run `npm run api:generate`.
+
+Mocks stay on until the backend URL is set. Switch single endpoints to the real server with `EXPO_PUBLIC_REAL_ENDPOINTS` (see `.env.example`). Postponed work is listed in `docs/open-items.md`.

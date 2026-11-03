@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useSettings, type SchemePreference } from '@/features/settings/store';
@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   Chip,
+  Choice,
   Input,
   LanguageSwitch,
   OTPInput,
@@ -27,47 +28,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         {title}
       </Text>
       {children}
-    </View>
-  );
-}
-
-function Choice<T extends string>({
-  value,
-  options,
-  onChange,
-}: {
-  value: T;
-  options: { id: T; label: string }[];
-  onChange: (id: T) => void;
-}) {
-  const theme = useTheme();
-  const c = theme.colors;
-  return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.space[2] }}>
-      {options.map((o) => {
-        const on = o.id === value;
-        return (
-          <Pressable
-            key={o.id}
-            accessibilityRole="radio"
-            accessibilityState={{ checked: on }}
-            onPress={() => onChange(o.id)}
-            style={{
-              minHeight: theme.minTarget,
-              paddingHorizontal: theme.space[4],
-              justifyContent: 'center',
-              borderRadius: theme.radius.full,
-              borderWidth: 1.5,
-              borderColor: on ? c.action : c.border,
-              backgroundColor: on ? c.action : 'transparent',
-            }}
-          >
-            <Text variant="label" style={{ color: on ? c.onAction : c.textPrimary }}>
-              {o.label}
-            </Text>
-          </Pressable>
-        );
-      })}
     </View>
   );
 }

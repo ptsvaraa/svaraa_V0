@@ -4,46 +4,15 @@
  */
 
 export interface paths {
-    "/auth/otp/send": {
+    "/health": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        post: operations["sendOtp"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/otp/verify": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["verifyOtp"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getMe"];
+        /** Liveness */
+        get: operations["health_health_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -52,16 +21,195 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/circles": {
+    "/health/ready": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["listCircles"];
+        /** Readiness (Postgres and Redis) */
+        get: operations["ready_health_ready_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/otp/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send a sign-in code by SMS
+         * @description Sends a one-time code by SMS. Send the country code and the mobile number as separate fields. A number can be asked again only after a 60 second cooldown.
+         */
+        post: operations["otp_request_api_v1_auth_otp_request_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/otp/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify the code and sign in
+         * @description Creates the account on first use (only a login record; the profile is created when the user first saves one). Returns the access token, the refresh token, the user id and whether the user is new.
+         */
+        post: operations["otp_verify_api_v1_auth_otp_verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign in with Google
+         * @description Send the ID token from native Google Sign-In. The user can add a mobile number afterwards via `/auth/mobile/*`.
+         */
+        post: operations["google_sign_in_api_v1_auth_google_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get a new access token
+         * @description Send the refresh token. Fails with `session_revoked` after logout and `invalid_token` once the refresh token has expired.
+         */
+        post: operations["refresh_api_v1_auth_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * End this session
+         * @description The session id is blocked immediately, so this token can no longer be used or refreshed.
+         */
+        post: operations["logout_api_v1_auth_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/mobile/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start adding or changing the mobile number
+         * @description Sends a code to the new number. Returns 409 `mobile_number_taken` if another account already uses it.
+         */
+        post: operations["mobile_request_api_v1_auth_mobile_request_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/mobile/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm the code and save the mobile number */
+        post: operations["mobile_verify_api_v1_auth_mobile_verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get my profile */
+        get: operations["get_me_api_v1_users_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update my name and photo
+         * @description Only the fields you send change. Saving a name sets `profile_status` to `completed`.
+         */
+        patch: operations["patch_me_api_v1_users_me_patch"];
+        trace?: never;
+    };
+    "/api/v1/users/me/profile/skip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Skip the name/photo step
+         * @description Sets `profile_status` to `skipped` while it is still `pending`; a completed profile is left as is.
+         */
+        post: operations["skip_profile_api_v1_users_me_profile_skip_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -72,43 +220,160 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        OtpSendRequest: {
-            /** @example +919876543210 */
-            phone: string;
+        /** ErrorBody */
+        ErrorBody: {
+            /**
+             * Code
+             * @description Stable machine-readable code
+             * @example invalid_otp
+             */
+            code: string;
+            /**
+             * Message
+             * @example Incorrect or expired code
+             */
+            message: string;
+            /**
+             * Request Id
+             * @description Also returned in the x-request-id header
+             */
+            request_id?: string | null;
+            /**
+             * Fields
+             * @description Only on 422: per-field validation problems
+             */
+            fields?: {
+                [key: string]: unknown;
+            }[] | null;
         };
-        OtpSendResponse: {
-            /** @example 30 */
-            cooldownSec: number;
+        /** ErrorResponse */
+        ErrorResponse: {
+            error: components["schemas"]["ErrorBody"];
         };
-        OtpVerifyRequest: {
-            phone: string;
-            /** @example 000000 */
+        /** GoogleSignInIn */
+        GoogleSignInIn: {
+            /**
+             * Id Token
+             * @description ID token from native Google Sign-In on the device
+             */
+            id_token: string;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
+        /** OtpRequestIn */
+        OtpRequestIn: {
+            /**
+             * Country Code
+             * @description Dialling code of the country, with or without +
+             * @example +91
+             */
+            country_code: string;
+            /**
+             * Mobile Number
+             * @description Mobile number without the country code
+             * @example 9812345678
+             */
+            mobile_number: string;
+        };
+        /** OtpVerifyIn */
+        OtpVerifyIn: {
+            /**
+             * Country Code
+             * @example +91
+             */
+            country_code: string;
+            /**
+             * Mobile Number
+             * @example 9812345678
+             */
+            mobile_number: string;
+            /**
+             * Code
+             * @example 123456
+             */
             code: string;
         };
-        Session: {
-            token: string;
-            /** @enum {string} */
-            role: "caregiver" | "wearer";
-        };
-        Me: {
-            id: string;
-            name: string;
-            /** @enum {string} */
-            role: "caregiver" | "wearer";
-        };
-        Circle: {
-            id: string;
-            name: string;
-            /** @enum {string} */
-            status: "connected" | "not_connected" | "low_battery";
-        };
-        Error: {
+        /** ProfileOut */
+        ProfileOut: {
             /**
-             * @description Stable machine code. The app maps it to translated text; `message` is for logs only.
-             * @enum {string}
+             * Id
+             * Format: uuid
              */
-            code: "AUTH_PHONE_INVALID" | "AUTH_OTP_INVALID" | "AUTH_OTP_EXPIRED" | "AUTH_OTP_RATE_LIMITED" | "AUTH_UNAUTHORIZED" | "NOT_FOUND" | "SERVER_ERROR";
-            message: string;
+            id: string;
+            /** Display Name */
+            display_name: string | null;
+            /** Avatar Url */
+            avatar_url: string | null;
+            profile_status: components["schemas"]["ProfileStatus"];
+        };
+        /** ProfilePatchIn */
+        ProfilePatchIn: {
+            /**
+             * Display Name
+             * @description Saving a name marks the profile completed
+             * @example Asha
+             */
+            display_name?: string | null;
+            /** Avatar Url */
+            avatar_url?: string | null;
+        };
+        /**
+         * ProfileStatus
+         * @enum {string}
+         */
+        ProfileStatus: "pending" | "completed" | "skipped";
+        /** RefreshIn */
+        RefreshIn: {
+            /** Refresh Token */
+            refresh_token: string;
+        };
+        /** SignInOut */
+        SignInOut: {
+            /** Access Token */
+            access_token: string;
+            /**
+             * Token Type
+             * @default bearer
+             */
+            token_type: string;
+            /** Refresh Token */
+            refresh_token: string;
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+            /**
+             * Is New
+             * @description True if this sign-in created the account
+             */
+            is_new: boolean;
+        };
+        /** TokenOut */
+        TokenOut: {
+            /** Access Token */
+            access_token: string;
+            /**
+             * Token Type
+             * @default bearer
+             */
+            token_type: string;
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
         };
     };
     responses: never;
@@ -119,31 +384,56 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    sendOtp: {
+    health_health_get: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OtpSendRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
-            /** @description Code sent */
+            /** @description Successful Response */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OtpSendResponse"];
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
         };
     };
-    verifyOtp: {
+    ready_health_ready_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description A dependency is down */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    otp_request_api_v1_auth_otp_request_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -152,40 +442,209 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["OtpVerifyRequest"];
+                "application/json": components["schemas"]["OtpRequestIn"];
             };
         };
         responses: {
-            /** @description Verified */
-            200: {
+            /** @description Successful Response */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["Session"];
-                };
+                content?: never;
             };
-            /** @description Wrong or expired code */
+            /** @description Bad request, e.g. `invalid_mobile_number` */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Too many tries */
+            /** @description Validation error; see `fields` */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limited, e.g. `otp_cooldown` */
             429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };
     };
-    getMe: {
+    otp_verify_api_v1_auth_otp_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OtpVerifyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignInOut"];
+                };
+            };
+            /** @description Bad request, e.g. `invalid_mobile_number` */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation error; see `fields` */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    google_sign_in_api_v1_auth_google_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GoogleSignInIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignInOut"];
+                };
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation error; see `fields` */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    refresh_api_v1_auth_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenOut"];
+                };
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation error; see `fields` */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    logout_api_v1_auth_logout_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -194,18 +653,177 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Signed-in person */
-            200: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Me"];
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };
     };
-    listCircles: {
+    mobile_request_api_v1_auth_mobile_request_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OtpRequestIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request, e.g. `invalid_mobile_number` */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict, e.g. `mobile_number_taken` */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Rate limited, e.g. `otp_cooldown` */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    mobile_verify_api_v1_auth_mobile_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OtpVerifyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request, e.g. `invalid_mobile_number` */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflict, e.g. `mobile_number_taken` */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation error; see `fields` */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_me_api_v1_users_me_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -214,13 +832,120 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Circles the person belongs to */
+            /** @description Successful Response */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Circle"][];
+                    "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    patch_me_api_v1_users_me_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfilePatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation error; see `fields` */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    skip_profile_api_v1_users_me_profile_skip_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Not authenticated: `missing_token`, `invalid_token`, `session_revoked`, `invalid_otp`, ... */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Dependency unavailable, e.g. `otp_send_failed` */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

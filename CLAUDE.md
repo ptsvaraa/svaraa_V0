@@ -12,6 +12,7 @@ Read docs/frontend-plan.md first. Screens in docs/svaraa-wireframes.html. Brand 
 - Server state: TanStack Query. App state: Zustand. Mocks: MSW.
 - Mobile-only code in .native.ts, with a .web.ts stub.
 - Small commits; run lint, typecheck and tests before finishing.
+- Check docs/open-items.md before finishing a feature; add anything postponed there.
 
 ## Git and pull requests
 

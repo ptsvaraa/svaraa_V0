@@ -1,31 +1,47 @@
-import type { components } from './schema';
-
-/** Stable error codes the backend sends (see `Error` in openapi.json). */
-export type ApiErrorCode = components['schemas']['Error']['code'];
-
-/** Codes the app adds itself: no connection, or an answer it cannot read. */
-export type ClientErrorCode = 'NETWORK_ERROR' | 'UNKNOWN';
-
-export type ErrorCode = ApiErrorCode | ClientErrorCode;
-
 /**
- * Every code. Typed as a Record so that adding a code to openapi.json fails typecheck until it is listed here,
- * and the tests then check it has text in en.json and hi.json.
+ * Error codes the real backend sends (`error.code` in every error body, lowercase), plus two the app adds itself.
+ * Typed as a Record so a new code must be listed here, and the tests then require English and Hindi text for it.
  */
-const CODE_TABLE: Record<ErrorCode, true> = {
-  AUTH_PHONE_INVALID: true,
-  AUTH_OTP_INVALID: true,
-  AUTH_OTP_EXPIRED: true,
-  AUTH_OTP_RATE_LIMITED: true,
-  AUTH_UNAUTHORIZED: true,
-  NOT_FOUND: true,
-  SERVER_ERROR: true,
-  NETWORK_ERROR: true,
-  UNKNOWN: true,
-};
+const CODE_TABLE = {
+  // Sign-in and phone number
+  invalid_otp: true,
+  otp_cooldown: true,
+  rate_limited: true,
+  invalid_mobile_number: true,
+  invalid_country_code: true,
+  invalid_google_token: true,
+  google_email_unverified: true,
+  mobile_number_taken: true,
+  // Session
+  missing_token: true,
+  invalid_token: true,
+  session_revoked: true,
+  user_not_found: true,
+  // Generic
+  validation_error: true,
+  bad_request: true,
+  unauthorized: true,
+  forbidden: true,
+  not_found: true,
+  conflict: true,
+  service_unavailable: true,
+  internal_error: true,
+  // Added by the app: no connection, or an answer it cannot read.
+  network_error: true,
+  unknown: true,
+} as const;
+
+export type ErrorCode = keyof typeof CODE_TABLE;
 export const ERROR_CODES = Object.keys(CODE_TABLE) as ErrorCode[];
 
 const KNOWN = new Set<string>(ERROR_CODES);
+
+/** Codes that mean "this sign-in is over": the refresh token is no longer good. */
+export const SESSION_ENDED_CODES: readonly ErrorCode[] = [
+  'invalid_token',
+  'session_revoked',
+  'user_not_found',
+];
 
 export class ApiError extends Error {
   readonly code: ErrorCode;
@@ -40,29 +56,45 @@ export class ApiError extends Error {
 
 /** i18n key for a code. A code the app does not know shows the generic message, never raw text from the server. */
 export function errorMessageKey(code: string | undefined): string {
-  return `errors.${code && KNOWN.has(code) ? code : 'UNKNOWN'}`;
+  return `errors.${code && KNOWN.has(code) ? code : 'unknown'}`;
 }
 
-/** Turn whatever went wrong (a failed request, an error body, a thrown error) into an ApiError. */
+/**
+ * Turn whatever went wrong (an error body, a thrown error) into an ApiError.
+ * The backend wraps errors as `{ error: { code, message } }`; a bare `{ code }` also works.
+ */
 export function toApiError(input: unknown, status?: number): ApiError {
   if (input instanceof ApiError) return input;
-  if (input && typeof input === 'object' && 'code' in input) {
-    const { code, message } = input as { code?: unknown; message?: unknown };
-    const known = typeof code === 'string' && KNOWN.has(code);
+  const body = unwrap(input);
+  if (body) {
+    const known = typeof body.code === 'string' && KNOWN.has(body.code);
     return new ApiError(
-      known ? (code as ErrorCode) : fallbackFor(status),
-      typeof message === 'string' ? message : undefined,
+      known ? (body.code as ErrorCode) : fallbackFor(status),
+      typeof body.message === 'string' ? body.message : undefined,
       status,
     );
   }
   // fetch throws a TypeError when there is no network.
-  if (input instanceof TypeError) return new ApiError('NETWORK_ERROR', input.message);
+  if (input instanceof TypeError) return new ApiError('network_error', input.message);
   return new ApiError(fallbackFor(status), undefined, status);
 }
 
+function unwrap(input: unknown): { code?: unknown; message?: unknown } | undefined {
+  if (!input || typeof input !== 'object') return undefined;
+  const o = input as { error?: unknown; code?: unknown };
+  if (o.error && typeof o.error === 'object') return o.error as { code?: unknown; message?: unknown };
+  return 'code' in o ? (o as { code?: unknown; message?: unknown }) : undefined;
+}
+
 function fallbackFor(status?: number): ErrorCode {
-  if (status === 401) return 'AUTH_UNAUTHORIZED';
-  if (status === 404) return 'NOT_FOUND';
-  if (status !== undefined && status >= 500) return 'SERVER_ERROR';
-  return 'UNKNOWN';
+  if (status === 401) return 'unauthorized';
+  if (status === 403) return 'forbidden';
+  if (status === 404) return 'not_found';
+  if (status === 409) return 'conflict';
+  if (status === 422) return 'validation_error';
+  if (status === 429) return 'rate_limited';
+  if (status === 503) return 'service_unavailable';
+  if (status !== undefined && status >= 500) return 'internal_error';
+  if (status !== undefined && status >= 400) return 'bad_request';
+  return 'unknown';
 }

@@ -83,7 +83,7 @@
     "send": "Send code",
     "verify": "Verify",
     "resend": "Resend code",
-    "resendIn": "Resend in {{seconds}} s",
+    "resendIn": "Resend in {{time}}",
     "sent": "Code sent to {{to}}",
     "verified": "Verified",
     "wrong": "That code is not right. Try again."
@@ -95,14 +95,126 @@
     "progress": "Step {{current}} of {{total}}"
   },
   "errors": {
-    "AUTH_PHONE_INVALID": "That phone number is not valid. Check it and try again.",
-    "AUTH_OTP_INVALID": "That code is not right. Try again.",
-    "AUTH_OTP_EXPIRED": "That code has expired. Ask for a new one.",
-    "AUTH_OTP_RATE_LIMITED": "Too many tries. Wait a little and try again.",
-    "AUTH_UNAUTHORIZED": "Please sign in again.",
-    "NOT_FOUND": "We could not find that.",
-    "SERVER_ERROR": "Something went wrong on our side. Try again in a moment.",
-    "NETWORK_ERROR": "No connection. Check your internet and try again.",
-    "UNKNOWN": "Something went wrong. Try again."
+    "invalid_otp": "Wrong or expired code",
+    "otp_cooldown": "Please wait a minute before asking for another code.",
+    "rate_limited": "Too many tries. Wait a little and try again.",
+    "invalid_mobile_number": "That mobile number is not valid. Check it and try again.",
+    "invalid_country_code": "That country code is not valid.",
+    "invalid_google_token": "Google sign-in did not work. Try again.",
+    "google_email_unverified": "Your Google email is not verified. Verify it with Google and try again.",
+    "mobile_number_taken": "This mobile number is already used by another account.",
+    "missing_token": "Please sign in again.",
+    "invalid_token": "Please sign in again.",
+    "session_revoked": "You were signed out. Please sign in again.",
+    "user_not_found": "We could not find your account. Please sign in again.",
+    "validation_error": "Some details are not valid. Check them and try again.",
+    "bad_request": "That did not work. Try again.",
+    "unauthorized": "Please sign in again.",
+    "forbidden": "You do not have access to that.",
+    "not_found": "We could not find that.",
+    "conflict": "That clashes with something that already exists.",
+    "service_unavailable": "The service is busy right now. Try again in a moment.",
+    "internal_error": "Something went wrong on our side. Try again in a moment.",
+    "network_error": "No connection. Check your internet and try again.",
+    "unknown": "Something went wrong. Try again."
+  },
+  "tabs": {
+    "home": "Home",
+    "explore": "Explore",
+    "alerts": "Alerts",
+    "profile": "Profile"
+  },
+  "auth": {
+    "welcome": {
+      "title": "Care that listens",
+      "subtitle": "Your family’s voice-first safety companion.",
+      "google": "Continue with Google",
+      "phone": "Continue with phone number",
+      "terms": "By continuing you accept the Terms and Privacy Policy.",
+      "logo": "Svaraa logo"
+    },
+    "phone": {
+      "title": "Verify your phone",
+      "subtitle": "We use this for SOS and account recovery.",
+      "addTitle": "Add your phone",
+      "addSubtitle": "Add your mobile number to finish signing in. We use it for SOS and account recovery.",
+      "country": "Country",
+      "mobile": "Mobile number",
+      "sendOtp": "Send OTP",
+      "changeNumber": "Change number",
+      "devHint": "Test mode: the code is 000000. A number ending in 00 signs in as an existing user; one ending in 11 is already taken."
+    }
+  },
+  "intro": {
+    "p1": {
+      "title": "Meet Svaraa",
+      "body": "A pendant your parent wears and a family that stays close."
+    },
+    "p2": {
+      "title": "Just speak",
+      "body": "One press and your voice is all it takes to call for help or reach family."
+    },
+    "p3": {
+      "title": "Everyone in the loop",
+      "body": "Caregivers see how things are going and are alerted the moment help is needed."
+    },
+    "page": "Page {{n}} of {{total}}",
+    "haveSvaraa": "I have a Svaraa",
+    "explore": "Explore the product",
+    "skip": "Skip for now"
+  },
+  "home": {
+    "greeting": "Hello, {{name}}",
+    "greetingNoName": "Hello",
+    "settings": "Settings",
+    "setup": {
+      "title": "Finish setting up Svaraa",
+      "notStarted": "Not started",
+      "saved": "Saved at step {{current}} of {{total}}",
+      "start": "Start",
+      "continue": "Continue"
+    },
+    "haveSvaraa": "I have a Svaraa",
+    "start": "Start",
+    "explore": "Explore features",
+    "buying": "Buying guide",
+    "story": "Product story"
+  },
+  "setup": {
+    "title": "Set up Svaraa",
+    "stubBody": "The setup steps are coming in a later release. For now this screen only lets you test saving and resuming progress.",
+    "advance": "Finish next step (test)",
+    "reset": "Start over (test)",
+    "done": "All steps done. The setup card is gone from Home."
+  },
+  "placeholder": {
+    "comingSoon": "This part is coming soon."
+  },
+  "profile": {
+    "title": "Profile",
+    "account": "Account",
+    "signedInWith": "Signed in with",
+    "google": "Google",
+    "phone": "Phone number",
+    "mobile": "Mobile number",
+    "mobileNone": "Not added",
+    "display": "Display",
+    "mode": "Who is using the app",
+    "scheme": "Colours",
+    "language": "Language",
+    "dev": "Components demo",
+    "signOut": "Sign out"
+  },
+  "countries": {
+    "IN": "India",
+    "US": "United States",
+    "GB": "United Kingdom",
+    "AE": "United Arab Emirates",
+    "SG": "Singapore",
+    "CA": "Canada",
+    "AU": "Australia",
+    "SA": "Saudi Arabia",
+    "NP": "Nepal",
+    "BD": "Bangladesh"
   }
 }

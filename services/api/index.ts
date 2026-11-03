@@ -1,3 +1,11 @@
 export { api, createApi } from './client';
-export { ApiError, ERROR_CODES, errorMessageKey, toApiError, type ErrorCode } from './errors';
+export { call } from './call';
+export {
+  ApiError,
+  ERROR_CODES,
+  SESSION_ENDED_CODES,
+  errorMessageKey,
+  toApiError,
+  type ErrorCode,
+} from './errors';
 export type { paths, components } from './schema';
