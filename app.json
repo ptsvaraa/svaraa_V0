@@ -8,7 +8,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ai.svaraa"
+      "bundleIdentifier": "ai.svaraa",
+      "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "Svaraa uses Bluetooth to talk to your pendant."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +21,8 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "ai.svaraa"
+      "package": "ai.svaraa",
+      "permissions": ["android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT"]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -32,7 +36,24 @@
       "expo-font",
       "expo-localization",
       "expo-asset",
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Svaraa uses the camera to scan the code in your pendant's box.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Svaraa shares where you are with your family only during an SOS, even when the app is closed.",
+          "locationWhenInUsePermission": "Svaraa shares where you are with your family only during an SOS.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isIosBackgroundLocationEnabled": true
+        }
+      ]
     ]
   }
 }
