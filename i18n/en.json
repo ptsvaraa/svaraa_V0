@@ -437,6 +437,21 @@
       "skip": "Skip for now",
       "sent": "Invite shared. They will show as waiting until you approve them.",
       "message": "Join me on Svaraa so you can see how I'm doing and get my alerts. Open {{url}} or enter the code {{code}} in the Svaraa app."
+    },
+    "drill": {
+      "title": "Test your SOS",
+      "dot": "Gold dot",
+      "how": "Hold the gold dot for three seconds, or tap the button below.",
+      "run": "Run SOS drill",
+      "again": "Run the drill again",
+      "waiting": "Waiting for someone to answer… {{time}}",
+      "marked": "Alerts are marked DRILL, so nobody worries.",
+      "passed": "Your SOS works",
+      "answeredBy": "{{name}} answered the drill.",
+      "answered": "Someone answered the drill.",
+      "expired": "No one answered in time",
+      "expiredBody": "Check that your emergency contacts' numbers are right, let them know a drill is coming, and try again.",
+      "finish": "Finish setup"
     }
   },
   "languages": {
