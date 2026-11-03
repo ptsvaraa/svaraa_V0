@@ -9,20 +9,21 @@ For the person who connects the app to the server. Simple steps, no coding knowl
 
 ## Status of each area
 
-| Screen                    | What it needs                                                                      | Service file                                 | Switch                | Status      |
-| ------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------- | --------------------- | ----------- |
-| A1, A2 Sign in (phone)    | Send code, check code, refresh, sign out                                           | `services/auth/authApi.ts`                   | `flags.auth`          | Draft ready |
-| A1 Sign in (Google)       | Google token, then `/auth/google`                                                  | `services/auth/authApi.ts`                   | `flags.googleSignIn`  | Mock        |
-| A2 Add your phone         | `/auth/mobile/request`, `/mobile/verify`                                           | `services/auth/authApi.ts`                   | `flags.auth`          | Draft ready |
-| A4 Home (name)            | `GET` and `PATCH /users/me`                                                        | `services/auth/authApi.ts`                   | `flags.auth`          | Draft ready |
-| B1 Who are you?           | `POST /households` (not in the API yet)                                            | `services/household/householdApi.ts`         | `flags.household`     | Mock        |
-| B3 Caregiver alerts       | `POST /devices/push-token` (not in API)                                            | `services/notifications/notificationsApi.ts` | `flags.notifications` | Mock        |
-| B2 Wearer permissions     | `POST /devices/push-token` (not in API)                                            | `services/notifications/notificationsApi.ts` | `flags.notifications` | Mock        |
-| C1 About you + consent    | `PATCH /households/{id}/wearer`, `POST /households/{id}/consent` (not in API)      | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
-| C2 Claim pendant          | `POST /households/{id}/claim` (not in API)                                         | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
-| C3 Pair pendant           | `POST /households/{id}/devices/{device_id}/challenge`, `.../activate` (not in API) | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
-| C5, C6 Emergency contacts | `PUT /households/{id}/contacts` (not in API)                                       | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
-| C7 Invite a caregiver     | `POST /households/{id}/invites` (not in API)                                       | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
+| Screen                    | What it needs                                                                         | Service file                                 | Switch                | Status      |
+| ------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------- | ----------- |
+| A1, A2 Sign in (phone)    | Send code, check code, refresh, sign out                                              | `services/auth/authApi.ts`                   | `flags.auth`          | Draft ready |
+| A1 Sign in (Google)       | Google token, then `/auth/google`                                                     | `services/auth/authApi.ts`                   | `flags.googleSignIn`  | Mock        |
+| A2 Add your phone         | `/auth/mobile/request`, `/mobile/verify`                                              | `services/auth/authApi.ts`                   | `flags.auth`          | Draft ready |
+| A4 Home (name)            | `GET` and `PATCH /users/me`                                                           | `services/auth/authApi.ts`                   | `flags.auth`          | Draft ready |
+| B1 Who are you?           | `POST /households` (not in the API yet)                                               | `services/household/householdApi.ts`         | `flags.household`     | Mock        |
+| B3 Caregiver alerts       | `POST /devices/push-token` (not in API)                                               | `services/notifications/notificationsApi.ts` | `flags.notifications` | Mock        |
+| B2 Wearer permissions     | `POST /devices/push-token` (not in API)                                               | `services/notifications/notificationsApi.ts` | `flags.notifications` | Mock        |
+| C1 About you + consent    | `PATCH /households/{id}/wearer`, `POST /households/{id}/consent` (not in API)         | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
+| C2 Claim pendant          | `POST /households/{id}/claim` (not in API)                                            | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
+| C3 Pair pendant           | `POST /households/{id}/devices/{device_id}/challenge`, `.../activate` (not in API)    | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
+| C5, C6 Emergency contacts | `PUT /households/{id}/contacts` (not in API)                                          | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
+| C7 Invite a caregiver     | `POST /households/{id}/invites` (not in API)                                          | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
+| C8 SOS drill              | `POST /households/{id}/drills`, `GET /households/{id}/drills/{drill_id}` (not in API) | `services/household/wearerApi.ts`            | `flags.household`     | Mock        |
 
 "Draft ready" means the endpoint exists in `docs/openapi.json` and the app already calls it the right way. It has not been tried against the live server.
 "Live" means it has been tried on a phone against the real server. Nothing is Live yet.
@@ -59,6 +60,7 @@ Household (B1): on Home, tap the setup card, choose "I'm a caregiver", tap Conti
 Notifications (B3): tap Allow notifications and accept. You should move on. If you tap "Don't allow", you should see "Open settings".
 Wearer basics (C1): fill in a name, tick the agreement, tap Continue. You should reach "Scan the code in the box".
 Pairing (C3, C4) uses the pendant simulator (`flags.pendantTransport = 'simulator'`): tap "I pressed the dot", then Pair, then tick the three checks.
+SOS drill (C8): tap "Run SOS drill". The mock's first emergency contact answers after 6 seconds.
 Claim (C2): tap "Enter code instead" and type a code in the shape `SVRA-2041-7K3P` (mock: any such code works; one ending in `-0000` is "already claimed").
 
 ## If something breaks
