@@ -45,6 +45,7 @@ export default function Home() {
         accessibilityLabel={`${t('home.product.name')}. ${t('home.product.body')}`}
         onPress={() => router.navigate('/explore')}
         style={{
+          flexShrink: 0,
           borderRadius: theme.radius.xl,
           overflow: 'hidden',
           borderWidth: 1,
@@ -57,7 +58,12 @@ export default function Home() {
           accessibilityRole="image"
           accessibilityLabel={t('home.product.alt')}
           resizeMode="cover"
-          style={{ width: '100%', aspectRatio: 725 / 394, backgroundColor: theme.colors.sunken }}
+          style={{
+            width: '100%',
+            aspectRatio: 725 / 394,
+            flexShrink: 0,
+            backgroundColor: theme.colors.sunken,
+          }}
         />
         <View style={{ padding: theme.space[4], gap: theme.space[1] }}>
           <Text variant="heading" tone="heading">

@@ -80,7 +80,8 @@ export default function Intro() {
         </>
       }
     >
-      <View style={{ flex: 1, justifyContent: 'center', gap: theme.space[4] }}>
+      {/* flexShrink 0: a horizontal list shrinks by default on a phone, which cut the bottom off the photos. */}
+      <View style={{ flexGrow: 1, flexShrink: 0, justifyContent: 'center', gap: theme.space[4] }}>
         <FlatList
           ref={list}
           data={LOOP}
@@ -96,13 +97,13 @@ export default function Intro() {
             setIndex(Math.round(e.nativeEvent.contentOffset.x / pageWidth));
             setTouching(false);
           }}
-          style={{ flexGrow: 0 }}
+          style={{ flexGrow: 0, flexShrink: 0 }}
           renderItem={({ item, index: at }) => {
             const key = `intro.story.${item.id}`;
             const isCopy = at === STORIES.length;
             return (
               <View
-                style={{ width: pageWidth, gap: theme.space[3] }}
+                style={{ width: pageWidth, gap: theme.space[3], flexShrink: 0 }}
                 // The copy of the first story is only for the loop: screen readers skip it.
                 accessibilityElementsHidden={isCopy}
                 importantForAccessibility={isCopy ? 'no-hide-descendants' : 'auto'}
@@ -115,6 +116,7 @@ export default function Intro() {
                   style={{
                     width: pageWidth,
                     height: pageWidth / STORY_IMAGE_RATIO,
+                    flexShrink: 0,
                     borderRadius: theme.radius.xl,
                     backgroundColor: theme.colors.sunken,
                   }}
