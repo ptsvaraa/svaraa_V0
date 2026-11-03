@@ -93,9 +93,16 @@ describe('Home (A4)', () => {
 
   it('uses the Google name when the profile has none', async () => {
     await useMockBackend();
+    await signInWithGoogleToken('some-token', 'Meera Rao');
+    await renderApp(<Home />);
+    expect(await screen.findByText('Hello, Meera')).toBeTruthy();
+  });
+
+  it('says just Hello after the mock Google sign-in, which has no name', async () => {
+    await useMockBackend();
     await googleSignIn();
     await renderApp(<Home />);
-    expect(await screen.findByText('Hello, Samarth')).toBeTruthy();
+    expect(await screen.findByText('Hello')).toBeTruthy();
   });
 
   it('shows the setup card as not started, with a Start action', async () => {

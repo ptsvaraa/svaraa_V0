@@ -11,6 +11,7 @@ import {
   verifyOtpAndSignIn,
 } from '@/services/auth/authApi';
 import { useSession } from '@/services/auth/session';
+import { resetMockDb } from '@/services/mocks/db';
 import { DEMO_CODE } from '@/services/mocks/routes';
 import { calls, INDIA, useMockBackend } from '@/test-utils/backend';
 import { refreshAccessToken } from '@/services/api/authedFetch';
@@ -73,14 +74,29 @@ describe('Google sign-in and adding a phone', () => {
     return signInWithGoogleToken(idToken, name);
   }
 
-  it('signs in with no mobile number yet, and keeps the Google name for the greeting', async () => {
+  it('signs in with no mobile number yet, and no name (the mock Google account has none)', async () => {
     const out = await signInWithGoogle();
     expect(out.isNew).toBe(true);
     expect(useSession.getState()).toMatchObject({
       method: 'google',
-      googleName: 'Samarth',
+      googleName: undefined,
       mobile: undefined,
     });
+  });
+
+  it('keeps the name Google gives, for the greeting', async () => {
+    await signInWithGoogleToken('some-token', 'Meera Rao');
+    expect(useSession.getState().googleName).toBe('Meera Rao');
+  });
+
+  it('asks a new Google user for a phone even after an earlier mock user added one and the app reloaded', async () => {
+    await signInWithGoogle();
+    await verifyMobile(INDIA, DEMO_CODE);
+    // The app reloads: the mock backend starts empty, but the phone still has what it saved.
+    resetMockDb({ reload: true });
+    await useSession.getState().clear();
+    await signInWithGoogle();
+    expect(useSession.getState().mobile).toBeUndefined();
   });
 
   it('adds a phone with /auth/mobile/request then /auth/mobile/verify', async () => {

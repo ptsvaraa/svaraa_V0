@@ -26,11 +26,20 @@ const fresh = (): Db => ({
 });
 let db = fresh();
 
-export function resetMockDb(): void {
-  db = fresh();
-}
+/**
+ * Ids must differ every time the app reloads. The phone keeps per-user values (such as the verified mobile number)
+ * across reloads while this mock database starts empty, so ids that repeat would make a brand-new mock user
+ * look like one who had already added a phone.
+ */
+const newRun = () => Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+let run = newRun();
+const uuid = (n: number) => `${run}-0000-4000-8000-${String(n).padStart(12, '0')}`;
 
-const uuid = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
+/** Empty the mock backend. `reload: true` also acts like an app reload: new users get ids that were never used before. */
+export function resetMockDb(options?: { reload?: boolean }): void {
+  db = fresh();
+  if (options?.reload) run = newRun();
+}
 
 /** Finds the user for this key (a phone number or a Google token), creating one on first use. */
 export function findOrCreateUser(key: string, existing = false): { user: MockUser; isNew: boolean } {

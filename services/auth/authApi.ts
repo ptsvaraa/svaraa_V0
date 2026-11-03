@@ -54,6 +54,6 @@ export type GoogleResult = { idToken: string; name?: string };
  * use @react-native-google-signin/google-signin in services/auth/google.native.ts, with a .web stub.
  */
 export async function getGoogleCredential(): Promise<GoogleResult> {
-  if (flags.googleSignIn === 'mock') return { idToken: 'mock-google-id-token', name: 'Samarth' };
+  if (flags.googleSignIn === 'mock') return { idToken: 'mock-google-id-token' }; // no name: the greeting is then just "Hello"
   throw new Error('Native Google sign-in is not wired yet');
 }
