@@ -64,6 +64,9 @@ function Screens() {
           <Stack.Screen name="wearer/claim" />
           <Stack.Screen name="wearer/pair" />
           <Stack.Screen name="wearer/check" />
+          <Stack.Screen name="wearer/contacts" />
+          <Stack.Screen name="wearer/contact" />
+          <Stack.Screen name="wearer/invite" />
           <Stack.Screen name="setup" />
         </Stack.Protected>
         <Stack.Screen name="(dev)/components" />

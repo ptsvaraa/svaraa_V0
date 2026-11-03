@@ -403,6 +403,40 @@
       "againFor": "Again: {{check}}",
       "finish": "Finish pairing",
       "repair": "Pair again"
+    },
+    "contacts": {
+      "title": "Set up emergency contacts",
+      "body": "If you need help, Svaraa alerts these people in this order.",
+      "row": "{{n}} · {{name}}",
+      "add": "Add contact",
+      "limit": "Up to {{max}} now. Add more later in My Profile."
+    },
+    "contact": {
+      "title": "Add a contact",
+      "editTitle": "Change contact",
+      "name": "Name",
+      "relationship": "Relationship (optional)",
+      "save": "Save contact",
+      "remove": "Remove contact",
+      "howAlerted": "Svaraa decides how to alert them: a call, and a notification if they use the app.",
+      "numberInvalid": "Enter a valid mobile number for this country.",
+      "numberInvalidIndia": "Enter a 10-digit Indian mobile number.",
+      "ownNumber": "This is your own number. Add someone else who can help.",
+      "duplicate": "This number is already in your contacts."
+    },
+    "invite": {
+      "title": "Invite someone to help",
+      "body": "They'll see your status and get alerts. You decide what they can do.",
+      "admin": "Admin",
+      "adminDetail": "Sees status, edits settings",
+      "viewer": "Viewer",
+      "viewerDetail": "Sees alerts only",
+      "codeLabel": "Invite code {{code}}",
+      "expires": "Expires in 24 hours. You approve them before they join.",
+      "share": "Share invite link",
+      "skip": "Skip for now",
+      "sent": "Invite shared. They will show as waiting until you approve them.",
+      "message": "Join me on Svaraa so you can see how I'm doing and get my alerts. Open {{url}} or enter the code {{code}} in the Svaraa app."
     }
   },
   "languages": {
