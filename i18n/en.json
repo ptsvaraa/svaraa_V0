@@ -256,5 +256,48 @@
     "SA": "Saudi Arabia",
     "NP": "Nepal",
     "BD": "Bangladesh"
+  },
+  "role": {
+    "title": "Who are you?",
+    "subtitle": "This sets up the right steps for you.",
+    "wearer": {
+      "title": "I'll wear Svaraa",
+      "detail": "Setting up my own pendant"
+    },
+    "caregiver": {
+      "title": "I'm a caregiver",
+      "detail": "Setting up for a family member",
+      "hint": "The person who wears Svaraa will need their own smartphone."
+    },
+    "unsure": {
+      "title": "Not sure yet / it's a gift",
+      "detail": "Save and come back later"
+    }
+  },
+  "permissions": {
+    "allow": "Allow notifications",
+    "openSettings": "Open settings",
+    "caregiver": {
+      "title": "Stay informed",
+      "body": "So you hear straight away if someone you care for needs help.",
+      "note": "Bluetooth and location are only needed on the wearer's phone, so we won't ask for them here."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "detail": "SOS and status alerts"
+    },
+    "state": {
+      "required": "Required",
+      "granted": "Allowed",
+      "denied": "Not allowed"
+    },
+    "denied": {
+      "title": "Notifications are off",
+      "body": "Open Settings, turn on notifications for Svaraa, then come back here."
+    }
+  },
+  "wearer": {
+    "title": "Next: your phone's permissions",
+    "body": "This part is coming soon. Your choice is saved, and the setup card on Home will bring you back here."
   }
 }

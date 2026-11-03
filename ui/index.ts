@@ -11,6 +11,7 @@ export { Steps, type Step } from './Steps';
 export { Sheet } from './Sheet';
 export { Logo } from './Logo';
 export { Choice } from './Choice';
+export { Option } from './Option';
 export { Screen } from './Screen';
 export { ListRow } from './ListRow';
 export { Select } from './Select';

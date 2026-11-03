@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useGreetingName } from '@/features/home/useGreetingName';
 import { ProductCard } from '@/features/home/ProductCard';
-import { useHousehold } from '@/features/household/store';
+import { nextSetupRoute, useHousehold } from '@/features/household/store';
 import { AttentionCard, ListRow, Screen, Text } from '@/ui';
 
 /** A4 · Home before setup. The setup card stays until a pendant is Active, and resumes where the person left off. */
@@ -10,9 +10,10 @@ export default function Home() {
   const { t } = useTranslation();
   const router = useRouter();
   const name = useGreetingName();
-  const { setupStep, totalSteps, hasActiveDevice } = useHousehold();
+  const { setupStep, totalSteps, hasActiveDevice, role, notificationsDone } = useHousehold();
   const started = setupStep > 0;
-  const openSetup = () => router.push('/setup');
+  // Continues from what was saved: role first, then that role's next step.
+  const openSetup = () => router.push(nextSetupRoute({ role, notificationsDone }));
 
   return (
     <Screen bottomInset={false}>

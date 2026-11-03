@@ -47,6 +47,9 @@ function Screens() {
         <Stack.Protected guard={signedIn && !needsPhone}>
           <Stack.Screen name="intro" />
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="role" />
+          <Stack.Screen name="caregiver-permissions" />
+          <Stack.Screen name="wearer/permissions" />
           <Stack.Screen name="setup" />
         </Stack.Protected>
         <Stack.Screen name="(dev)/components" />
