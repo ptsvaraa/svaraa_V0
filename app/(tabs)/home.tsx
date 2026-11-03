@@ -2,11 +2,15 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useGreetingName } from '@/features/home/useGreetingName';
 import { ProductCard } from '@/features/home/ProductCard';
+import { WearerHome } from '@/features/home/WearerHome';
 import { nextSetupRoute, useHousehold } from '@/features/household/store';
 import { useWearer } from '@/features/wearer/store';
 import { AttentionCard, ListRow, Screen, Text } from '@/ui';
 
-/** A4 · Home before setup. The setup card stays until a pendant is Active, and resumes where the person left off. */
+/**
+ * A4 · Home before setup. The setup card stays until a pendant is Active, and resumes where the person left off.
+ * A wearer whose pendant is Active sees E2 (WearerHome) instead.
+ */
 export default function Home() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -16,6 +20,8 @@ export default function Home() {
   const started = setupStep > 0;
   // Continues from what was saved: role first, then that role's next step.
   const openSetup = () => router.push(nextSetupRoute({ role, notificationsDone, setupStep, paired }));
+
+  if (role === 'wearer' && hasActiveDevice) return <WearerHome />;
 
   return (
     <Screen bottomInset={false}>

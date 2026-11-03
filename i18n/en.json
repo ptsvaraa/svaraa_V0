@@ -464,5 +464,18 @@
   "pendant": {
     "connected": "Pendant connected",
     "notConnected": "Pendant not connected"
+  },
+  "wearerHome": {
+    "protected": "Protected",
+    "notProtected": "Not protected right now",
+    "pendant": "Pendant {{battery}}% · connected",
+    "pendantCharging": "Pendant {{battery}}% · charging",
+    "connecting": "Connecting to your pendant…",
+    "keepClose": "Keep the pendant close to this phone with Bluetooth on. SOS needs the connection.",
+    "listening": "Svaraa listening",
+    "listeningOff": "Off",
+    "listeningDetail": "Only when you say \"Svaraa\".",
+    "people": "My people",
+    "noPeople": "No emergency contacts yet."
   }
 }

@@ -13,7 +13,7 @@ const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2,
 /**
  * C8 · Test your SOS. Hold the gold dot for three seconds, or tap the button. Contacts get an alert marked DRILL;
  * the drill passes when one of them answers within five minutes, then setup is finished and Home shows "Protected".
- * Also reachable from the wearer Home ("Run SOS drill") after setup: `?again=1` goes back instead of finishing setup.
+ * Also reachable from the wearer Home ("Run SOS drill"): once setup is done it is a practice run that ends with Done.
  */
 export default function SosDrill() {
   const theme = useTheme();

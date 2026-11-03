@@ -464,5 +464,18 @@
   "pendant": {
     "connected": "पेंडेंट जुड़ा है",
     "notConnected": "पेंडेंट जुड़ा नहीं है"
+  },
+  "wearerHome": {
+    "protected": "सुरक्षित",
+    "notProtected": "अभी सुरक्षित नहीं",
+    "pendant": "पेंडेंट {{battery}}% · जुड़ा है",
+    "pendantCharging": "पेंडेंट {{battery}}% · चार्ज हो रहा है",
+    "connecting": "आपके पेंडेंट से जुड़ रहे हैं…",
+    "keepClose": "पेंडेंट को इस फ़ोन के पास रखें और ब्लूटूथ चालू रखें। SOS के लिए जुड़ाव ज़रूरी है।",
+    "listening": "Svaraa सुन रहा है",
+    "listeningOff": "बंद",
+    "listeningDetail": "सिर्फ़ तब, जब आप \"Svaraa\" कहें।",
+    "people": "मेरे लोग",
+    "noPeople": "अभी कोई आपातकालीन संपर्क नहीं।"
   }
 }
