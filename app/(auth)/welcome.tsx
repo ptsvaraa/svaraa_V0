@@ -65,10 +65,11 @@ export default function Welcome() {
       >
         <Logo height={72} />
         <Text variant="title1" tone="heading" accessibilityRole="header" style={{ textAlign: 'center' }}>
-          {t('auth.welcome.title')}
-        </Text>
-        <Text tone="secondary" style={{ textAlign: 'center' }}>
-          {t('auth.welcome.subtitle')}
+          {t('auth.welcome.line1')}
+          {'\n'}
+          <Text variant="title1" tone="accent" italic>
+            {t('auth.welcome.line2')}
+          </Text>
         </Text>
       </View>
     </Screen>

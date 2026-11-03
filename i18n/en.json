@@ -126,8 +126,8 @@
   },
   "auth": {
     "welcome": {
-      "title": "Care that listens",
-      "subtitle": "Your family’s voice-first safety companion.",
+      "line1": "Care, in harmony.",
+      "line2": "Life, on their terms.",
       "google": "Continue with Google",
       "phone": "Continue with phone number",
       "terms": "By continuing you accept the Terms and Privacy Policy.",
