@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Role } from '@/services/household/householdApi';
 import { storage } from '@/services/storage';
+import { nextWearerRoute } from '@/features/wearer/steps';
 
 /**
  * PENDING BACKEND: there is no household or setup-progress API yet. This store is a mock that keeps the
@@ -30,6 +31,10 @@ type SetupState = {
   chooseRole(role: Role, householdId: string): Promise<void>;
   /** B3 done. Counts as step 2. */
   finishNotifications(): Promise<void>;
+  /** A setup step is finished (never moves progress back). */
+  reachStep(step: number): Promise<void>;
+  /** The pendant is Active (wearer: SOS drill passed). The Home setup card goes away. */
+  activate(): Promise<void>;
   /** Test helper until real setup screens exist. */
   advance(): Promise<void>;
   reset(): Promise<void>;
@@ -91,6 +96,16 @@ export const useHousehold = create<SetupState>((set, get) => ({
     await persist(get());
   },
 
+  reachStep: async (step) => {
+    set((s) => ({ setupStep: Math.min(Math.max(s.setupStep, step), s.totalSteps) }));
+    await persist(get());
+  },
+
+  activate: async () => {
+    set((s) => ({ setupStep: s.totalSteps, hasActiveDevice: true }));
+    await persist(get());
+  },
+
   advance: async () => {
     const { setupStep, totalSteps } = get();
     const next = Math.min(setupStep + 1, totalSteps);
@@ -122,10 +137,13 @@ export const useHousehold = create<SetupState>((set, get) => ({
 
 /**
  * Where the setup card sends the person: the first step they have not finished.
- * No role yet: B1. Wearer: B2 (FE-B builds it; a placeholder for now). Caregiver: B3, then D1 (FE-04; /setup for now).
+ * No role yet: B1. Wearer: the next C step (see features/wearer/steps.ts). Caregiver: B3, then D1 (FE-04; /setup for now).
+ * `paired`: the wearer paired the pendant (C3) but has not done the checks (C4).
  */
-export function nextSetupRoute(s: Pick<SetupState, 'role' | 'notificationsDone'>) {
+export function nextSetupRoute(
+  s: Pick<SetupState, 'role' | 'notificationsDone'> & { setupStep?: number; paired?: boolean },
+) {
   if (!s.role) return '/role' as const;
-  if (s.role === 'wearer') return '/wearer/permissions' as const;
+  if (s.role === 'wearer') return nextWearerRoute(s.setupStep ?? 0, s.paired);
   return s.notificationsDone ? ('/setup' as const) : ('/caregiver-permissions' as const);
 }

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useGreetingName } from '@/features/home/useGreetingName';
 import { ProductCard } from '@/features/home/ProductCard';
 import { nextSetupRoute, useHousehold } from '@/features/household/store';
+import { useWearer } from '@/features/wearer/store';
 import { AttentionCard, ListRow, Screen, Text } from '@/ui';
 
 /** A4 · Home before setup. The setup card stays until a pendant is Active, and resumes where the person left off. */
@@ -11,9 +12,10 @@ export default function Home() {
   const router = useRouter();
   const name = useGreetingName();
   const { setupStep, totalSteps, hasActiveDevice, role, notificationsDone } = useHousehold();
+  const paired = useWearer((s) => !!s.pendantId);
   const started = setupStep > 0;
   // Continues from what was saved: role first, then that role's next step.
-  const openSetup = () => router.push(nextSetupRoute({ role, notificationsDone }));
+  const openSetup = () => router.push(nextSetupRoute({ role, notificationsDone, setupStep, paired }));
 
   return (
     <Screen bottomInset={false}>

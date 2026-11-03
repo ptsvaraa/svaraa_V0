@@ -116,7 +116,16 @@
     "service_unavailable": "The service is busy right now. Try again in a moment.",
     "internal_error": "Something went wrong on our side. Try again in a moment.",
     "network_error": "No connection. Check your internet and try again.",
-    "unknown": "Something went wrong. Try again."
+    "unknown": "Something went wrong. Try again.",
+    "invalid_claim_code": "That code is not right. Check the card in the box and try again.",
+    "device_already_claimed": "This pendant is already claimed by another household.",
+    "consent_required": "Please agree to how Svaraa hears and records first.",
+    "invalid_device_signature": "We could not confirm this is a genuine Svaraa pendant. Try pairing again.",
+    "invite_role_invalid": "Choose Admin or Viewer for this invite.",
+    "drill_not_found": "We could not find that drill. Start a new one.",
+    "pendant_not_found": "We could not find your pendant. Press the gold dot once and keep it close to the phone.",
+    "pendant_connect_failed": "The pendant did not connect. Press the gold dot once and try again.",
+    "pendant_not_connected": "Your pendant is not connected. Keep it close to the phone and try again."
   },
   "tabs": {
     "home": "Home",
@@ -297,7 +306,84 @@
     }
   },
   "wearer": {
-    "title": "Next: your phone's permissions",
-    "body": "This part is coming soon. Your choice is saved, and the setup card on Home will bring you back here."
+    "optional": "Optional",
+    "permissions": {
+      "title": "Allow what Svaraa needs",
+      "body": "Your phone connects to the pendant and sends SOS. We ask now so setup doesn't get interrupted.",
+      "allow": "Allow and continue",
+      "why": "Why we ask",
+      "whyTitle": "Why we ask",
+      "whyBody": "Your phone is the link between your pendant and your family. Bluetooth lets it talk to the pendant. Location is shared only during an SOS, so help can find you. Notifications bring you family alerts and SOS drills. We never use these for anything else.",
+      "bluetooth": {
+        "title": "Bluetooth",
+        "detail": "Talk to your pendant"
+      },
+      "location": {
+        "title": "Location, always",
+        "detail": "Share where you are during SOS"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "detail": "Family alerts and drills"
+      },
+      "battery": {
+        "title": "Battery exemption",
+        "detail": "Recommended. Keeps the pendant connected when the phone is idle.",
+        "action": "Open"
+      },
+      "denied": {
+        "title": "Something is turned off",
+        "body": "Open Settings, allow what is marked \"Not allowed\" for Svaraa, then come back here."
+      }
+    },
+    "about": {
+      "title": "About you",
+      "name": "Your name",
+      "callAs": "What should Svaraa call you? (optional)",
+      "callAsHint": "Only changes how the voice assistant speaks to you.",
+      "languages": "Preferred languages",
+      "notes": "Health notes (optional)",
+      "pacemaker": "I have a pacemaker or ICD",
+      "consent": "I agree to how Svaraa hears and records.",
+      "details": "Details"
+    },
+    "consent": {
+      "title": "How Svaraa hears and records",
+      "hearsTitle": "What it hears",
+      "hears": "When you speak to Svaraa, your words are sent to trusted AI services so it can understand and reply.",
+      "recordsTitle": "When it records",
+      "records": "Only after you say \"Svaraa\". The pendant shows when it is listening.",
+      "seesTitle": "Who sees what",
+      "sees": "People you invite see your status and alerts, and your location only during an SOS. You decide what they can do."
+    },
+    "claim": {
+      "title": "Scan the code in the box",
+      "where": "It's on the card inside the box, under the pendant.",
+      "owner": "Claiming makes you the owner of this pendant. You can transfer it later.",
+      "typeInstead": "Enter code instead",
+      "scanInstead": "Scan the code instead",
+      "codeLabel": "Code from the card",
+      "codeHint": "Three groups of four letters or numbers.",
+      "codePlaceholder": "SVRA-2041-7K3P",
+      "submit": "Claim pendant",
+      "viewfinder": "Camera viewfinder. Point it at the code on the card.",
+      "cameraAsk": "Svaraa needs the camera to scan the code.",
+      "cameraDenied": "The camera is turned off for Svaraa. Enter the code instead, or allow the camera in Settings.",
+      "allowCamera": "Allow camera",
+      "taken": {
+        "title": "This pendant is already claimed",
+        "owner": "It belongs to a household owned by {{initial}}•••.",
+        "ownerUnknown": "It belongs to another household.",
+        "next": "Ask the owner to release it, or contact Svaraa support if you bought it second-hand.",
+        "retry": "Scan another code"
+      }
+    }
+  },
+  "languages": {
+    "en": "English",
+    "hi": "Hindi",
+    "ta": "Tamil",
+    "gu": "Gujarati",
+    "bn": "Bengali"
   }
 }

@@ -8,6 +8,8 @@ import '@/i18n';
 import { env } from '@/config/env';
 import { useHousehold } from '@/features/household/store';
 import { restoreLanguage } from '@/features/settings/language';
+import { useSettings } from '@/features/settings/store';
+import { useWearer } from '@/features/wearer/store';
 import { startMocks } from '@/services/mocks';
 import { useSession } from '@/services/auth/session';
 import { ThemeProvider, fontAssets, useTheme } from '@/ui';
@@ -18,12 +20,20 @@ const queryClient = new QueryClient();
 function useSessionEffects() {
   const userId = useSession((s) => s.userId);
   useEffect(() => {
-    if (userId) void useHousehold.getState().load(userId);
-    else {
+    if (userId) {
+      void useHousehold.getState().load(userId);
+      void useWearer.getState().load(userId);
+    } else {
       useHousehold.getState().unload();
+      useWearer.getState().unload();
       queryClient.clear(); // never show one person's data to the next
     }
   }, [userId]);
+  // Wearers get the large-text theme (same screens, same button sizes).
+  const role = useHousehold((s) => s.role);
+  useEffect(() => {
+    useSettings.getState().setThemeMode(role === 'wearer' ? 'wearer' : 'caregiver');
+  }, [role]);
 }
 
 function Screens() {
@@ -50,6 +60,8 @@ function Screens() {
           <Stack.Screen name="role" />
           <Stack.Screen name="caregiver-permissions" />
           <Stack.Screen name="wearer/permissions" />
+          <Stack.Screen name="wearer/about" />
+          <Stack.Screen name="wearer/claim" />
           <Stack.Screen name="setup" />
         </Stack.Protected>
         <Stack.Screen name="(dev)/components" />
