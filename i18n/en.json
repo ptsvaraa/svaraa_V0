@@ -146,22 +146,32 @@
     }
   },
   "intro": {
-    "p1": {
-      "title": "Meet Svaraa",
-      "body": "A pendant your parent wears and a family that stays close."
-    },
-    "p2": {
-      "title": "Just speak",
-      "body": "One press and your voice is all it takes to call for help or reach family."
-    },
-    "p3": {
-      "title": "Everyone in the loop",
-      "body": "Caregivers see how things are going and are alerted the moment help is needed."
-    },
     "page": "Page {{n}} of {{total}}",
     "haveSvaraa": "I have a Svaraa",
     "explore": "Explore the product",
-    "skip": "Skip for now"
+    "skip": "Skip for now",
+    "story": {
+      "respond": {
+        "label": "Respond",
+        "lead": "A familiar voice. ",
+        "sub": "Natural conversations that turn everyday requests into thoughtful support.",
+        "alt": "An older couple chatting during a walk through a leafy park, the woman touching her Svaraa pendant.",
+        "accent": "A helpful response."
+      },
+      "remind": {
+        "label": "Remind",
+        "lead": "Gentle reminders. ",
+        "sub": "Medicine, water and daily routines, without another screen to manage.",
+        "alt": "An older couple at the breakfast table taking their medicine with glasses of water, a pill organiser beside them.",
+        "accent": "Everyday reassurance."
+      },
+      "rescue": {
+        "label": "Rescue",
+        "lead": "Help, brought closer.",
+        "sub": "An SOS connects the wearer to their trusted circle of care.",
+        "alt": "A woman kneels beside an older woman seated on a bathroom floor after a fall, reassuring her."
+      }
+    }
   },
   "home": {
     "greeting": "Hello, {{name}}",

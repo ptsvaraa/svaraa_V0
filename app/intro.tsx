@@ -1,13 +1,15 @@
-import { useRef, useState } from 'react';
-import { FlatList, View, useWindowDimensions } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, FlatList, Image, View, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { AUTO_ADVANCE_MS, STORIES, STORY_IMAGE_RATIO } from '@/features/intro/stories';
 import { useSession } from '@/services/auth/session';
 import { Button, Screen, Text, useTheme } from '@/ui';
 
-const PAGES = ['p1', 'p2', 'p3'] as const;
-
-/** A3 · Intro. Shown once after a new account is created. Every way out ends the intro. */
+/**
+ * A3 · Intro: swipe through the product story (the seven Svaraas, from the marketing site).
+ * Shown once after a new account is created. Every way out ends the intro.
+ */
 export default function Intro() {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -16,6 +18,24 @@ export default function Intro() {
   const pageWidth = Math.min(width, 520) - theme.space[5] * 2;
   const [page, setPage] = useState(0);
   const list = useRef<FlatList>(null);
+  const [touching, setTouching] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+  }, []);
+
+  // Move to the next story every 3 s, and back to the first after the last. Waits while a finger is on it,
+  // and starts a fresh 3 s after any swipe. Off when the phone asks for reduced motion.
+  useEffect(() => {
+    if (touching || reduceMotion) return;
+    const id = setTimeout(() => {
+      const next = (page + 1) % STORIES.length;
+      list.current?.scrollToIndex({ index: next, animated: true });
+      setPage(next);
+    }, AUTO_ADVANCE_MS);
+    return () => clearTimeout(id);
+  }, [page, touching, reduceMotion]);
 
   const leave = (then: () => void) => {
     useSession.getState().finishIntro();
@@ -50,44 +70,62 @@ export default function Intro() {
       <View style={{ flex: 1, justifyContent: 'center', gap: theme.space[4] }}>
         <FlatList
           ref={list}
-          data={PAGES}
-          keyExtractor={(p) => p}
+          data={STORIES}
+          keyExtractor={(story) => story.id}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           snapToInterval={pageWidth}
           decelerationRate="fast"
-          onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / pageWidth))}
+          getItemLayout={(_, index) => ({ length: pageWidth, offset: pageWidth * index, index })}
+          onScrollBeginDrag={() => setTouching(true)}
+          onMomentumScrollEnd={(e) => {
+            setPage(Math.round(e.nativeEvent.contentOffset.x / pageWidth));
+            setTouching(false);
+          }}
           style={{ flexGrow: 0 }}
-          renderItem={({ item }) => (
-            <View
-              style={{ width: pageWidth, gap: theme.space[3], paddingVertical: theme.space[6] }}
-              accessible
-              accessibilityLabel={`${t(`intro.${item}.title`)}. ${t(`intro.${item}.body`)}`}
-            >
-              <View
-                style={{
-                  height: 150,
-                  borderRadius: theme.radius.xl,
-                  backgroundColor: theme.colors.sunken,
-                  marginBottom: theme.space[3],
-                }}
-              />
-              <Text variant="title1" tone="heading" accessibilityRole="header">
-                {t(`intro.${item}.title`)}
-              </Text>
-              <Text tone="secondary">{t(`intro.${item}.body`)}</Text>
-            </View>
-          )}
+          renderItem={({ item, index }) => {
+            const key = `intro.story.${item.id}`;
+            return (
+              <View style={{ width: pageWidth, gap: theme.space[3] }}>
+                <Image
+                  source={item.image}
+                  accessibilityRole="image"
+                  accessibilityLabel={t(`${key}.alt`)}
+                  resizeMode="cover"
+                  style={{
+                    width: pageWidth,
+                    height: pageWidth / STORY_IMAGE_RATIO,
+                    borderRadius: theme.radius.xl,
+                    backgroundColor: theme.colors.sunken,
+                  }}
+                />
+                <View accessible accessibilityRole="header" style={{ gap: theme.space[2] }}>
+                  <Text variant="kicker" tone="spirit">
+                    {String(index + 1).padStart(2, '0')} · {t(`${key}.label`)}
+                  </Text>
+                  <Text variant="title2" tone="heading">
+                    {t(`${key}.lead`)}
+                    {item.accent ? (
+                      <Text variant="title2" tone="accent" italic>
+                        {t(`${key}.accent`)}
+                      </Text>
+                    ) : null}
+                  </Text>
+                </View>
+                <Text tone="secondary">{t(`${key}.sub`)}</Text>
+              </View>
+            );
+          }}
         />
         <View
           accessible
-          accessibilityLabel={t('intro.page', { n: page + 1, total: PAGES.length })}
+          accessibilityLabel={t('intro.page', { n: page + 1, total: STORIES.length })}
           style={{ flexDirection: 'row', gap: theme.space[2], justifyContent: 'center' }}
         >
-          {PAGES.map((p, i) => (
+          {STORIES.map((story, i) => (
             <View
-              key={p}
+              key={story.id}
               style={{
                 width: 10,
                 height: 10,
