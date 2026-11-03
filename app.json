@@ -26,6 +26,13 @@
       "output": "single"
     },
     "scheme": "svaraa",
-    "plugins": ["expo-router", "expo-secure-store", "expo-font", "expo-localization", "expo-asset"]
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font",
+      "expo-localization",
+      "expo-asset",
+      "expo-notifications"
+    ]
   }
 }
