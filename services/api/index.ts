@@ -9,4 +9,4 @@ export {
   type ErrorCode,
 } from './errors';
 export type { paths, components } from './schema';
-export type { Role, HouseholdOut, PushTokenIn } from './pending';
+export type * from './pending';

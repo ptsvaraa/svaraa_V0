@@ -17,6 +17,13 @@ const CODE_TABLE = {
   invalid_token: true,
   session_revoked: true,
   user_not_found: true,
+  // Pendant claim and setup. PENDING BACKEND: codes agreed for the household APIs, not in docs/openapi.json yet.
+  invalid_claim_code: true,
+  device_already_claimed: true,
+  consent_required: true,
+  invalid_device_signature: true,
+  invite_role_invalid: true,
+  drill_not_found: true,
   // Generic
   validation_error: true,
   bad_request: true,
@@ -28,6 +35,10 @@ const CODE_TABLE = {
   internal_error: true,
   // Added by the app: no connection, or an answer it cannot read.
   network_error: true,
+  // Added by the app: the pendant (services/pendant).
+  pendant_not_found: true,
+  pendant_connect_failed: true,
+  pendant_not_connected: true,
   unknown: true,
 } as const;
 
@@ -46,11 +57,14 @@ export const SESSION_ENDED_CODES: readonly ErrorCode[] = [
 export class ApiError extends Error {
   readonly code: ErrorCode;
   readonly status?: number;
-  constructor(code: ErrorCode, message?: string, status?: number) {
+  /** Extra safe fields from the error body, such as `owner_hint` (a masked initial) for device_already_claimed. */
+  readonly details?: Record<string, unknown>;
+  constructor(code: ErrorCode, message?: string, status?: number, details?: Record<string, unknown>) {
     super(message ?? code);
     this.name = 'ApiError';
     this.code = code;
     this.status = status;
+    this.details = details;
   }
 }
 
@@ -68,10 +82,12 @@ export function toApiError(input: unknown, status?: number): ApiError {
   const body = unwrap(input);
   if (body) {
     const known = typeof body.code === 'string' && KNOWN.has(body.code);
+    const { code: _code, message: _message, ...details } = body as Record<string, unknown>;
     return new ApiError(
       known ? (body.code as ErrorCode) : fallbackFor(status),
       typeof body.message === 'string' ? body.message : undefined,
       status,
+      Object.keys(details).length ? details : undefined,
     );
   }
   // fetch throws a TypeError when there is no network.

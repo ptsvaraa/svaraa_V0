@@ -1,4 +1,11 @@
-import type { HouseholdOut, PushTokenIn, Role } from '@/services/api/pending';
+import type {
+  ConsentIn,
+  DeviceOut,
+  HouseholdOut,
+  PushTokenIn,
+  Role,
+  WearerProfileIn,
+} from '@/services/api/pending';
 import type { components } from '@/services/api/schema';
 
 type Profile = components['schemas']['ProfileOut'];
@@ -20,6 +27,16 @@ type Db = {
   households: Map<string, HouseholdOut>;
   /** PENDING BACKEND: user id -> saved push tokens. */
   pushTokens: Map<string, PushTokenIn[]>;
+  /** PENDING BACKEND: household id -> what setup saved for it. */
+  setup: Map<string, HouseholdSetup>;
+  /** PENDING BACKEND: claim code -> device, for every code anyone claimed. */
+  claimed: Map<string, DeviceOut & { householdId: string }>;
+};
+
+/** What the mock backend keeps per household during setup. */
+export type HouseholdSetup = {
+  wearer?: WearerProfileIn;
+  consents: (ConsentIn & { given_at: string })[];
 };
 
 const fresh = (): Db => ({
@@ -30,6 +47,8 @@ const fresh = (): Db => ({
   otpAskedAt: new Map(),
   households: new Map(),
   pushTokens: new Map(),
+  setup: new Map(),
+  claimed: new Map(),
 });
 let db = fresh();
 
@@ -140,3 +159,40 @@ export function savePushTokenFor(userId: string, entry: PushTokenIn): void {
 /** For tests: what the mock backend holds for this user. */
 export const mockHouseholdOf = (userId: string) => db.households.get(userId);
 export const mockPushTokensOf = (userId: string) => db.pushTokens.get(userId) ?? [];
+
+/** PENDING BACKEND: the household with this id, if this user belongs to it. */
+export function householdOf(userId: string, householdId: string): HouseholdOut | undefined {
+  const h = db.households.get(userId);
+  return h?.id === householdId ? h : undefined;
+}
+
+/** PENDING BACKEND: the setup record of a household (created empty on first use). */
+export function setupOf(householdId: string): HouseholdSetup {
+  let s = db.setup.get(householdId);
+  if (!s) {
+    s = { consents: [] };
+    db.setup.set(householdId, s);
+  }
+  return s;
+}
+
+const withoutHousehold = ({ householdId: _h, ...d }: DeviceOut & { householdId: string }): DeviceOut => d;
+
+/** PENDING BACKEND: claim the device behind a box code for this household. Claiming twice returns the same device. */
+export function claimDevice(householdId: string, code: string): DeviceOut | 'device_already_claimed' {
+  const found = db.claimed.get(code);
+  if (found) return found.householdId === householdId ? withoutHousehold(found) : 'device_already_claimed';
+  const device: DeviceOut = {
+    id: uuid(++db.counter),
+    serial: code.split('-')[1] ?? '0000',
+    claim_state: 'unverified',
+    is_owner: true,
+  };
+  db.claimed.set(code, { ...device, householdId });
+  return device;
+}
+
+/** For tests: the setup record and devices the mock backend holds for this household. */
+export const mockSetupOf = (householdId: string) => db.setup.get(householdId);
+export const mockDevicesOf = (householdId: string) =>
+  [...db.claimed.values()].filter((d) => d.householdId === householdId).map(withoutHousehold);

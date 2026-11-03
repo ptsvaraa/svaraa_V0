@@ -1,8 +1,16 @@
-import type { HouseholdCreateIn, PushTokenIn } from '@/services/api/pending';
+import type {
+  ClaimIn,
+  ConsentIn,
+  HouseholdCreateIn,
+  PushTokenIn,
+  WearerProfileIn,
+} from '@/services/api/pending';
 import type { components } from '@/services/api/schema';
 import {
   authenticate,
+  claimDevice,
   createHouseholdFor,
+  householdOf,
   findOrCreateUser,
   mobileTakenBy,
   openSession,
@@ -10,6 +18,8 @@ import {
   refreshAccess,
   revokeSession,
   savePushTokenFor,
+  setupOf,
+  type MockUser,
 } from './db';
 
 /** Demo code accepted by the mock backend (the real dev backend also uses it). */
@@ -18,6 +28,11 @@ export const DEMO_CODE = '000000';
 export const EXISTING_USER_SUFFIX = '00';
 /** Demo hook: a number ending in 11 already belongs to another account (409 mobile_number_taken). */
 export const TAKEN_NUMBER_SUFFIX = '11';
+/** Demo claim code, as printed on the card in the box. Any code in this shape works. */
+export const DEMO_CLAIM_CODE = 'SVRA-2041-7K3P';
+/** Demo hook: a claim code ending in -0000 belongs to another household (409 device_already_claimed). */
+export const CLAIMED_CODE_SUFFIX = '-0000';
+const CLAIM_CODE = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
 
 type S = components['schemas'];
 /** `params` holds the values of `{name}` parts of the path, e.g. `{ household_id: 'h1' }`. */
@@ -62,6 +77,28 @@ function readNumber(body: unknown): { number: string } | { error: MockResult } {
 }
 
 const API = '/api/v1';
+
+/** The signed-in user and their household from `{household_id}`, or the error to answer with. */
+function inHousehold(ctx: MockContext): { user: MockUser; householdId: string } | { error: MockResult } {
+  const auth = authenticate(ctx.headers);
+  if ('code' in auth) return { error: fail(401, auth.code, 'Invalid or expired token') };
+  const household = householdOf(auth.user.id, ctx.params.household_id ?? '');
+  if (!household) return { error: fail(404, 'not_found', 'Household not found') };
+  return { user: auth.user, householdId: household.id };
+}
+
+/** 409 for a pendant that belongs to another household. Only a masked initial of the owner is given. */
+const alreadyClaimed: MockResult = {
+  status: 409,
+  body: {
+    error: {
+      code: 'device_already_claimed',
+      message: 'Already claimed',
+      owner_hint: 'M',
+      request_id: 'mock',
+    },
+  },
+};
 
 /**
  * The mock backend, as plain data. No library, so it runs everywhere (phone, web, Jest).
@@ -228,6 +265,60 @@ export const routes: MockRoute[] = [
         return fail(422, 'validation_error', 'Invalid request');
       savePushTokenFor(auth.user.id, { token, platform });
       return NO_CONTENT;
+    },
+  },
+  // PENDING BACKEND: C1 / D2, the wearer's basics. Not in docs/openapi.json yet.
+  {
+    method: 'PATCH',
+    path: `${API}/households/{household_id}/wearer`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      const p = (ctx.body ?? {}) as Partial<WearerProfileIn>;
+      const name = typeof p.name === 'string' ? p.name.trim() : '';
+      if (!name || name.length > 100 || !Array.isArray(p.languages) || typeof p.pacemaker !== 'boolean')
+        return fail(422, 'validation_error', 'Invalid request');
+      const wearer: WearerProfileIn = {
+        name,
+        call_as: p.call_as?.trim() || null,
+        languages: p.languages,
+        health_notes: p.health_notes?.trim() || null,
+        pacemaker: p.pacemaker,
+      };
+      setupOf(h.householdId).wearer = wearer;
+      return { status: 200, body: wearer };
+    },
+  },
+  // PENDING BACKEND: a consent record (C1 checkbox; D7 by link). Not in docs/openapi.json yet.
+  {
+    method: 'POST',
+    path: `${API}/households/{household_id}/consent`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      const c = (ctx.body ?? {}) as Partial<ConsentIn>;
+      if (!c.version || (c.via !== 'app' && c.via !== 'link'))
+        return fail(422, 'validation_error', 'Invalid request');
+      setupOf(h.householdId).consents.push({
+        version: c.version,
+        via: c.via,
+        given_at: new Date().toISOString(),
+      });
+      return NO_CONTENT;
+    },
+  },
+  // PENDING BACKEND: C2 / D1, claim the pendant with the one-time code from the box. Not in docs/openapi.json yet.
+  {
+    method: 'POST',
+    path: `${API}/households/{household_id}/claim`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      const code = String((ctx.body as Partial<ClaimIn> | undefined)?.code ?? '').toUpperCase();
+      if (!CLAIM_CODE.test(code)) return fail(404, 'invalid_claim_code', 'Unknown claim code');
+      if (code.endsWith(CLAIMED_CODE_SUFFIX)) return alreadyClaimed;
+      const device = claimDevice(h.householdId, code);
+      return device === 'device_already_claimed' ? alreadyClaimed : { status: 200, body: device };
     },
   },
 ];
