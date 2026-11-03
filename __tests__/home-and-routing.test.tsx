@@ -110,7 +110,7 @@ describe('Home (A4)', () => {
     expect(screen.getByText('Finish setting up Svaraa')).toBeTruthy();
     expect(screen.getByText('Not started')).toBeTruthy();
     fireEvent.press(screen.getByRole('button', { name: 'Start' }));
-    expect(mockPush).toHaveBeenCalledWith('/setup');
+    expect(mockPush).toHaveBeenCalledWith('/role'); // no role yet: setup begins at B1
   });
 
   it('resumes: shows the saved step and Continue', async () => {
