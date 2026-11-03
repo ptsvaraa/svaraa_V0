@@ -15,3 +15,20 @@ Things we decided to do later. Check this list before finishing each feature so 
 | `docs/source/*.docx` still say "caretaker"; the product word is "caregiver".                                                                                                                                                                                      | `docs/source/`                                                                       | Docs clean-up                             |
 | Real OTP provider. The backend only accepts the fixed dev code 000000 and refuses to start in production.                                                                                                                                                         | backend                                                                              | Production                                |
 | Bundle id `ai.svaraa` and EAS builds not run (needs an EAS login).                                                                                                                                                                                                | `app.json`, `eas.json`                                                               | Device builds                             |
+
+## Plugging in the real backend
+
+Today everything runs on the mock backend inside the app, and nothing has been tested against the real server. The contract follows `docs/openapi.json` (branch `feature/auth-and-user-creation`). Google sign-in is mocked twice: the button returns a fake token (`flags.googleSignIn = 'mock'`) and the mock backend accepts any token.
+
+Switch over in this order, one endpoint at a time with `EXPO_PUBLIC_REAL_ENDPOINTS` (see `.env.example`), after setting `EXPO_PUBLIC_API_URL` to the Railway dev URL:
+
+1. **Phone OTP:** `POST /api/v1/auth/otp/request` and `/otp/verify`. Needs no Google setup. The backend only has the dev code `000000`; there is no SMS provider yet.
+2. **Session:** `GET /api/v1/users/me`, `POST /auth/refresh`, `POST /auth/logout`. Check the 401 refresh and retry against the real server, and the real error codes.
+3. **Add your phone:** `POST /auth/mobile/request` and `/mobile/verify`. `/users/me` has no `mobile_number`, so the app keeps the verified number on the phone until the backend returns it.
+4. **Google, last:**
+   1. Backend deployed with `GOOGLE_CLIENT_IDS` set to the client IDs the app uses.
+   2. Google Cloud OAuth clients: web, iOS (`ai.svaraa`) and Android (`ai.svaraa`, with the app's SHA-1).
+   3. First test the backend alone with its `/dev/google-login` page.
+   4. A development build (EAS, needs the Expo login): Google sign-in cannot run in Expo Go. Then add native Google sign-in in `services/auth/google.native.ts` with a web stub, and set `flags.googleSignIn = 'native'`.
+
+Also needed from the backend for a smooth Google flow: `mobile_number` on `/users/me`, and a screen that saves the name (`PATCH /users/me`), otherwise the greeting is "Hello".
