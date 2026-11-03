@@ -20,11 +20,12 @@ export const EXISTING_USER_SUFFIX = '00';
 export const TAKEN_NUMBER_SUFFIX = '11';
 
 type S = components['schemas'];
-export type MockContext = { body: unknown; headers: Headers };
+/** `params` holds the values of `{name}` parts of the path, e.g. `{ household_id: 'h1' }`. */
+export type MockContext = { body: unknown; headers: Headers; params: Record<string, string> };
 export type MockResult = { status: number; body?: unknown };
 export type MockRoute = {
-  method: 'GET' | 'POST' | 'PATCH';
-  /** Full path, as in docs/openapi.json (includes /api/v1). */
+  method: 'GET' | 'POST' | 'PATCH' | 'PUT';
+  /** Full path, as in docs/openapi.json (includes /api/v1). `{name}` parts match any one segment. */
   path: string;
   respond: (ctx: MockContext) => MockResult;
 };
@@ -34,6 +35,20 @@ const fail = (status: number, code: string, message: string): MockResult => ({
   body: { error: { code, message, request_id: 'mock' } },
 });
 const NO_CONTENT: MockResult = { status: 204 };
+
+/** The `{name}` values when `path` fits the route's pattern, or undefined when it does not. */
+export function matchPath(pattern: string, path: string): Record<string, string> | undefined {
+  const want = pattern.split('/');
+  const got = path.split('/');
+  if (want.length !== got.length) return undefined;
+  const params: Record<string, string> = {};
+  for (let i = 0; i < want.length; i++) {
+    const name = /^\{(\w+)\}$/.exec(want[i])?.[1];
+    if (name && got[i]) params[name] = decodeURIComponent(got[i]);
+    else if (want[i] !== got[i]) return undefined;
+  }
+  return params;
+}
 
 /** Checks the phone fields the way the backend does. Returns the digits, or an error response. */
 function readNumber(body: unknown): { number: string } | { error: MockResult } {

@@ -18,3 +18,6 @@ export { Select } from './Select';
 export { Tabs, type TabItem } from './Tabs';
 export { LanguageSwitch } from './LanguageSwitch';
 export { fontAssets, fontFamily } from './fonts';
+export { Checkbox } from './Checkbox';
+export { MultiChoice } from './MultiChoice';
+export { StepList, type StepListItem } from './StepList';

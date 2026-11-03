@@ -40,7 +40,8 @@ describe('one set of mock routes', () => {
         headers: { 'content-type': 'application/json' },
         body: body === undefined ? undefined : JSON.stringify(body),
       });
-      const url = `${env.apiUrl}${route.path}`;
+      // Fill path parameters such as {household_id} with a sample value.
+      const url = `${env.apiUrl}${route.path.replace(/\{\w+\}/g, 'sample-id')}`;
       // Each side starts from a clean backend, so state from one call cannot change the other's answer.
       resetMockDb();
       const fromPhone = await phoneFetch(url, init());

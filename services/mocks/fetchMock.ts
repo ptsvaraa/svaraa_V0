@@ -1,5 +1,5 @@
 import { env, isMocked } from '@/config/env';
-import { routes } from './routes';
+import { matchPath, routes } from './routes';
 
 /**
  * Mock fetch for the phone. MSW needs browser APIs that React Native does not have,
@@ -12,10 +12,11 @@ export function createMockFetch(realFetch: typeof fetch): typeof fetch {
     const url = request.url;
     if (url.startsWith(env.apiUrl)) {
       const path = url.slice(env.apiUrl.length).split('?')[0];
-      const route = routes.find((r) => r.method === request.method && r.path === path);
+      const route = routes.find((r) => r.method === request.method && matchPath(r.path, path));
       if (route && isMocked(route.method, route.path)) {
         const body = route.method === 'GET' ? undefined : await request.json().catch(() => undefined);
-        const out = route.respond({ body, headers: request.headers });
+        const params = matchPath(route.path, path) ?? {};
+        const out = route.respond({ body, headers: request.headers, params });
         if (out.body === undefined) return new Response(null, { status: out.status });
         return new Response(JSON.stringify(out.body), {
           status: out.status,
