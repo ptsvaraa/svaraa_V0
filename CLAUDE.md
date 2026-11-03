@@ -14,6 +14,7 @@ Read docs/frontend-plan.md first. Screens in docs/svaraa-wireframes.html. Brand 
 - API: docs/openapi.json is the contract (real backend, branch feature/auth-and-user-creation). After it changes, run `npm run api:generate`.
 - Errors: map them in services/api/errors.ts using the real lowercase codes (`invalid_otp`, `otp_cooldown`, ...). Show our own i18n text for a code, never server text.
 - Server state: TanStack Query. App state: Zustand. Mocks: routes in services/mocks/routes.ts (MSW on web, a fetch mock on phone), switched to the real backend per endpoint with EXPO_PUBLIC_REAL_ENDPOINTS.
+- API work changes only services/, config/flags.ts and mocks, never screens. One service folder per area (services/auth/, services/household/, services/notifications/), one switch per area in config/flags.ts ('mock' or 'real'), and every mocked endpoint is marked `// PENDING BACKEND`. Keep the status table in docs/integration.md up to date in every PR.
 - Anything with no backend yet is mocked and marked "pending backend" in a comment.
 - Mobile-only code in .native.ts, with a .web.ts stub.
 - Small commits; run lint, typecheck and tests before finishing.
