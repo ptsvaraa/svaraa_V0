@@ -18,7 +18,11 @@ export default function Intro() {
   const { t } = useTranslation();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const pageWidth = Math.min(width, 520) - theme.space[5] * 2;
+  // The width really available, measured on the phone. (The sum below is only the starting guess.)
+  const [measured, setMeasured] = useState(0);
+  const pageWidth = measured || Math.min(width, 520) - theme.space[5] * 2;
+  // Photos are a little narrower than the page and centred, so they sit in the middle of the screen.
+  const imageWidth = Math.min(Math.round(pageWidth * 0.86), 340);
   // 0 to 6 are the seven stories; 7 is a copy of the first, placed after the last so the loop only ever moves forward.
   const [index, setIndex] = useState(0);
   const page = index % STORIES.length;
@@ -81,7 +85,10 @@ export default function Intro() {
       }
     >
       {/* flexShrink 0: a horizontal list shrinks by default on a phone, which cut the bottom off the photos. */}
-      <View style={{ flexGrow: 1, flexShrink: 0, justifyContent: 'center', gap: theme.space[4] }}>
+      <View
+        onLayout={(e) => setMeasured(Math.floor(e.nativeEvent.layout.width))}
+        style={{ flexGrow: 1, flexShrink: 0, justifyContent: 'center', gap: theme.space[4] }}
+      >
         <FlatList
           ref={list}
           data={LOOP}
@@ -97,13 +104,14 @@ export default function Intro() {
             setIndex(Math.round(e.nativeEvent.contentOffset.x / pageWidth));
             setTouching(false);
           }}
-          style={{ flexGrow: 0, flexShrink: 0 }}
+          // The list is exactly one page wide, so every page lines up with the screen.
+          style={{ flexGrow: 0, flexShrink: 0, width: pageWidth, alignSelf: 'center' }}
           renderItem={({ item, index: at }) => {
             const key = `intro.story.${item.id}`;
             const isCopy = at === STORIES.length;
             return (
               <View
-                style={{ width: pageWidth, gap: theme.space[3], flexShrink: 0 }}
+                style={{ width: pageWidth, gap: theme.space[3], flexShrink: 0, alignItems: 'center' }}
                 // The copy of the first story is only for the loop: screen readers skip it.
                 accessibilityElementsHidden={isCopy}
                 importantForAccessibility={isCopy ? 'no-hide-descendants' : 'auto'}
@@ -114,18 +122,22 @@ export default function Intro() {
                   accessibilityLabel={t(`${key}.alt`)}
                   resizeMode="cover"
                   style={{
-                    width: pageWidth,
-                    height: pageWidth / STORY_IMAGE_RATIO,
+                    width: imageWidth,
+                    height: imageWidth / STORY_IMAGE_RATIO,
                     flexShrink: 0,
                     borderRadius: theme.radius.xl,
                     backgroundColor: theme.colors.sunken,
                   }}
                 />
-                <View accessible accessibilityRole="header" style={{ gap: theme.space[2] }}>
-                  <Text variant="kicker" tone="spirit">
+                <View
+                  accessible
+                  accessibilityRole="header"
+                  style={{ gap: theme.space[2], alignItems: 'center' }}
+                >
+                  <Text variant="kicker" tone="spirit" style={{ textAlign: 'center' }}>
                     {String((at % STORIES.length) + 1).padStart(2, '0')} · {t(`${key}.label`)}
                   </Text>
-                  <Text variant="title2" tone="heading">
+                  <Text variant="title2" tone="heading" style={{ textAlign: 'center' }}>
                     {t(`${key}.lead`)}
                     {item.accent ? (
                       <Text variant="title2" tone="accent" italic>
@@ -134,7 +146,9 @@ export default function Intro() {
                     ) : null}
                   </Text>
                 </View>
-                <Text tone="secondary">{t(`${key}.sub`)}</Text>
+                <Text tone="secondary" style={{ textAlign: 'center' }}>
+                  {t(`${key}.sub`)}
+                </Text>
               </View>
             );
           }}

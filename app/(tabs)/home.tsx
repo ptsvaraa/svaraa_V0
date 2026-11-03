@@ -46,6 +46,9 @@ export default function Home() {
         onPress={() => router.navigate('/explore')}
         style={{
           flexShrink: 0,
+          alignSelf: 'center',
+          width: '100%',
+          maxWidth: 420,
           borderRadius: theme.radius.xl,
           overflow: 'hidden',
           borderWidth: 1,
