@@ -19,3 +19,6 @@ export const STORY_IMAGE_RATIO = 800 / 600;
 
 /** The story moves on by itself every 2 seconds. */
 export const AUTO_ADVANCE_MS = 2000;
+
+/** Time to let the slide onto the repeated first story finish before jumping back to the real one. */
+export const SLIDE_SETTLE_MS = 450;

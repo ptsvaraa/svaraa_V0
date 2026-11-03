@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, FlatList, Image, View, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { AUTO_ADVANCE_MS, STORIES, STORY_IMAGE_RATIO } from '@/features/intro/stories';
+import { AUTO_ADVANCE_MS, SLIDE_SETTLE_MS, STORIES, STORY_IMAGE_RATIO } from '@/features/intro/stories';
 import { useSession } from '@/services/auth/session';
 import { Button, Screen, Text, useTheme } from '@/ui';
+
+/** The stories, then the first again at the end (see the effect in Intro). */
+const LOOP = [...STORIES, STORIES[0]];
 
 /**
  * A3 · Intro: swipe through the product story (the seven Svaraas, from the marketing site).
@@ -16,7 +19,9 @@ export default function Intro() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const pageWidth = Math.min(width, 520) - theme.space[5] * 2;
-  const [page, setPage] = useState(0);
+  // 0 to 6 are the seven stories; 7 is a copy of the first, placed after the last so the loop only ever moves forward.
+  const [index, setIndex] = useState(0);
+  const page = index % STORIES.length;
   const list = useRef<FlatList>(null);
   const [touching, setTouching] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -25,17 +30,25 @@ export default function Intro() {
     void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
   }, []);
 
-  // Move to the next story every 2 s, and back to the first after the last. Waits while a finger is on it,
-  // and starts a fresh 2 s after any swipe. Off when the phone asks for reduced motion.
+  // Always moves forward, every 2 s. After the last story it slides on to the copy of the first, then jumps back
+  // to the real first without animation (the two look the same), so it never scrolls backwards through the others.
+  // Waits while a finger is on it, and starts a fresh 2 s after any swipe. Off when the phone asks for reduced motion.
   useEffect(() => {
-    if (touching || reduceMotion) return;
+    if (touching) return;
+    if (index === STORIES.length) {
+      const id = setTimeout(() => {
+        list.current?.scrollToIndex({ index: 0, animated: false });
+        setIndex(0);
+      }, SLIDE_SETTLE_MS);
+      return () => clearTimeout(id);
+    }
+    if (reduceMotion) return;
     const id = setTimeout(() => {
-      const next = (page + 1) % STORIES.length;
-      list.current?.scrollToIndex({ index: next, animated: true });
-      setPage(next);
+      list.current?.scrollToIndex({ index: index + 1, animated: true });
+      setIndex(index + 1);
     }, AUTO_ADVANCE_MS);
     return () => clearTimeout(id);
-  }, [page, touching, reduceMotion]);
+  }, [index, touching, reduceMotion]);
 
   const leave = (then: () => void) => {
     useSession.getState().finishIntro();
@@ -70,8 +83,8 @@ export default function Intro() {
       <View style={{ flex: 1, justifyContent: 'center', gap: theme.space[4] }}>
         <FlatList
           ref={list}
-          data={STORIES}
-          keyExtractor={(story) => story.id}
+          data={LOOP}
+          keyExtractor={(story, i) => `${story.id}-${i}`}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
@@ -80,14 +93,20 @@ export default function Intro() {
           getItemLayout={(_, index) => ({ length: pageWidth, offset: pageWidth * index, index })}
           onScrollBeginDrag={() => setTouching(true)}
           onMomentumScrollEnd={(e) => {
-            setPage(Math.round(e.nativeEvent.contentOffset.x / pageWidth));
+            setIndex(Math.round(e.nativeEvent.contentOffset.x / pageWidth));
             setTouching(false);
           }}
           style={{ flexGrow: 0 }}
-          renderItem={({ item, index }) => {
+          renderItem={({ item, index: at }) => {
             const key = `intro.story.${item.id}`;
+            const isCopy = at === STORIES.length;
             return (
-              <View style={{ width: pageWidth, gap: theme.space[3] }}>
+              <View
+                style={{ width: pageWidth, gap: theme.space[3] }}
+                // The copy of the first story is only for the loop: screen readers skip it.
+                accessibilityElementsHidden={isCopy}
+                importantForAccessibility={isCopy ? 'no-hide-descendants' : 'auto'}
+              >
                 <Image
                   source={item.image}
                   accessibilityRole="image"
@@ -102,7 +121,7 @@ export default function Intro() {
                 />
                 <View accessible accessibilityRole="header" style={{ gap: theme.space[2] }}>
                   <Text variant="kicker" tone="spirit">
-                    {String(index + 1).padStart(2, '0')} · {t(`${key}.label`)}
+                    {String((at % STORIES.length) + 1).padStart(2, '0')} · {t(`${key}.label`)}
                   </Text>
                   <Text variant="title2" tone="heading">
                     {t(`${key}.lead`)}

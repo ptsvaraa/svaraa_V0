@@ -1,7 +1,8 @@
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import i18n from '@/i18n';
 import Intro from '@/app/intro';
-import { STORIES } from '@/features/intro/stories';
+import { FlatList } from 'react-native';
+import { SLIDE_SETTLE_MS, STORIES } from '@/features/intro/stories';
 import { useSession } from '@/services/auth/session';
 import { renderApp } from '@/test-utils/render';
 
@@ -19,18 +20,33 @@ beforeEach(async () => {
 });
 
 describe('Intro (A3): the product story', () => {
-  it('moves to the next story every 2 seconds and loops back to the first after the last', async () => {
+  it('only moves forward, every 2 seconds, and wraps from the 7th to the 1st without scrolling back', async () => {
     jest.useFakeTimers();
+    const scroll = jest.spyOn(FlatList.prototype, 'scrollToIndex');
     await renderApp(<Intro />);
     expect(screen.getByLabelText('Page 1 of 7')).toBeTruthy();
-    await act(async () => jest.advanceTimersByTime(2000));
-    expect(screen.getByLabelText('Page 2 of 7')).toBeTruthy();
-    for (let i = 3; i <= 7; i++) {
+    for (let i = 2; i <= 7; i++) {
       await act(async () => jest.advanceTimersByTime(2000));
       expect(screen.getByLabelText(`Page ${i} of 7`)).toBeTruthy();
     }
+    // 7th to 1st: slides forward onto a copy of the first story, then jumps to the real one.
     await act(async () => jest.advanceTimersByTime(2000));
     expect(screen.getByLabelText('Page 1 of 7')).toBeTruthy();
+    await act(async () => jest.advanceTimersByTime(SLIDE_SETTLE_MS));
+    expect(scroll.mock.calls.map(([o]) => [o.index, o.animated])).toEqual([
+      [1, true],
+      [2, true],
+      [3, true],
+      [4, true],
+      [5, true],
+      [6, true],
+      [7, true],
+      [0, false],
+    ]);
+    // and it carries on forward from the first
+    await act(async () => jest.advanceTimersByTime(2000));
+    expect(screen.getByLabelText('Page 2 of 7')).toBeTruthy();
+    scroll.mockRestore();
     jest.useRealTimers();
   });
 
