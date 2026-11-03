@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Svaraa",
-    "slug": "svaraa-mobile",
+    "name": "svaraa",
+    "slug": "svaraa",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ai.svaraa.mobile"
+      "bundleIdentifier": "ai.svaraa"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "ai.svaraa.mobile"
+      "package": "ai.svaraa"
     },
     "web": {
       "favicon": "./assets/favicon.png",
