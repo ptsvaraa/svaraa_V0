@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { areaOf, flags } from './flags';
 
 /** Environment settings. Set EXPO_PUBLIC_* in .env (see .env.example). */
 export const env = {
@@ -17,8 +18,14 @@ export const env = {
   appVersion: Constants.expoConfig?.version ?? '0.0.0',
 };
 
-/** True when this endpoint is answered by the mock backend (mocks on, and not switched to real). */
+/**
+ * True when this endpoint is answered by the mock backend.
+ * Mocks are off for it when: mocks are off for the whole app, or its endpoint is listed in EXPO_PUBLIC_REAL_ENDPOINTS,
+ * or its area is switched to 'real' in config/flags.ts.
+ */
 export function isMocked(method: string, path: string): boolean {
   if (!env.useMocks) return false;
-  return !(env.realEndpoints.includes('*') || env.realEndpoints.includes(`${method} ${path}`));
+  if (env.realEndpoints.includes('*') || env.realEndpoints.includes(`${method} ${path}`)) return false;
+  const area = areaOf(path);
+  return !(area && flags[area] === 'real');
 }

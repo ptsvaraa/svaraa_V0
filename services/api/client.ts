@@ -1,6 +1,7 @@
 import createClient, { type ClientOptions } from 'openapi-fetch';
 import { env } from '@/config/env';
 import { authedFetch } from './authedFetch';
+import type { PendingPaths } from './pending';
 import type { paths } from './schema';
 
 /**
@@ -8,7 +9,7 @@ import type { paths } from './schema';
  * Adds the bearer token and refreshes it on a 401 (see authedFetch.ts).
  */
 export function createApi(options?: ClientOptions) {
-  return createClient<paths>({ baseUrl: env.apiUrl, fetch: authedFetch, ...options });
+  return createClient<paths & PendingPaths>({ baseUrl: env.apiUrl, fetch: authedFetch, ...options });
 }
 
 export const api = createApi();
