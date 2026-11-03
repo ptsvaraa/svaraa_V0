@@ -9,7 +9,12 @@ Read docs/frontend-plan.md first. Screens in docs/svaraa-wireframes.html. Brand 
 - app/ = screens only. All API, pendant, voice and storage calls go through services/.
 - No hard-coded text: every string in i18n/en.json and i18n/hi.json.
 - Two themes: caregiver and wearer (larger text only; button size is the same in both).
-- Server state: TanStack Query. App state: Zustand. Mocks: MSW.
+- Naming: always "caregiver" (never "caretaker") and "household" (never "circle") in code, i18n and docs.
+- Buttons and tap targets are the same size in the caregiver and wearer themes; only text size differs.
+- API: docs/openapi.json is the contract (real backend, branch feature/auth-and-user-creation). After it changes, run `npm run api:generate`.
+- Errors: map them in services/api/errors.ts using the real lowercase codes (`invalid_otp`, `otp_cooldown`, ...). Show our own i18n text for a code, never server text.
+- Server state: TanStack Query. App state: Zustand. Mocks: routes in services/mocks/routes.ts (MSW on web, a fetch mock on phone), switched to the real backend per endpoint with EXPO_PUBLIC_REAL_ENDPOINTS.
+- Anything with no backend yet is mocked and marked "pending backend" in a comment.
 - Mobile-only code in .native.ts, with a .web.ts stub.
 - Small commits; run lint, typecheck and tests before finishing.
 - Check docs/open-items.md before finishing a feature; add anything postponed there.
