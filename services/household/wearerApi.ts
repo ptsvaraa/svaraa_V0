@@ -1,6 +1,13 @@
-import { api, call, type DeviceOut, type WearerProfileIn } from '@/services/api';
+import {
+  api,
+  call,
+  type ContactIn,
+  type DeviceOut,
+  type InviteRole,
+  type WearerProfileIn,
+} from '@/services/api';
 
-export type { DeviceOut, WearerProfileIn };
+export type { ContactIn, DeviceOut, InviteRole, WearerProfileIn };
 
 /** Version of the consent text on C1's "Details" sheet. Change it whenever that text changes. */
 export const CONSENT_VERSION = '2026-11-v0';
@@ -67,3 +74,21 @@ export const activatePendant = (
       body: { signature, pendant_id: pendantId },
     }),
   );
+
+/** Most emergency contacts setup takes. More can be added later in My Profile. */
+export const MAX_SETUP_CONTACTS = 2;
+
+/**
+ * C5: save the emergency contacts, in alert order. Replaces the whole list.
+ * PENDING BACKEND: PUT /api/v1/households/{household_id}/contacts is not in docs/openapi.json yet.
+ */
+export const saveContacts = (householdId: string, contacts: ContactIn[]) =>
+  call(api.PUT('/api/v1/households/{household_id}/contacts', { ...path(householdId), body: { contacts } }));
+
+/**
+ * C7: create an invite link and code (expires in 24 hours; the owner approves joiners). Creating a new one
+ * cancels the earlier open invite.
+ * PENDING BACKEND: POST /api/v1/households/{household_id}/invites is not in docs/openapi.json yet.
+ */
+export const createInvite = (householdId: string, role: InviteRole) =>
+  call(api.POST('/api/v1/households/{household_id}/invites', { ...path(householdId), body: { role } }));

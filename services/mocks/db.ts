@@ -4,6 +4,8 @@ import type {
   HouseholdOut,
   PushTokenIn,
   Role,
+  ContactIn,
+  InviteOut,
   WearerProfileIn,
 } from '@/services/api/pending';
 import type { components } from '@/services/api/schema';
@@ -37,6 +39,9 @@ type Db = {
 export type HouseholdSetup = {
   wearer?: WearerProfileIn;
   consents: (ConsentIn & { given_at: string })[];
+  contacts: ContactIn[];
+  /** Open invites; creating a new one cancels the others. */
+  invites: InviteOut[];
 };
 
 const fresh = (): Db => ({
@@ -170,7 +175,7 @@ export function householdOf(userId: string, householdId: string): HouseholdOut |
 export function setupOf(householdId: string): HouseholdSetup {
   let s = db.setup.get(householdId);
   if (!s) {
-    s = { consents: [] };
+    s = { consents: [], contacts: [], invites: [] };
     db.setup.set(householdId, s);
   }
   return s;
@@ -203,4 +208,11 @@ export function deviceOf(
   deviceId: string,
 ): (DeviceOut & { householdId: string }) | undefined {
   return [...db.claimed.values()].find((d) => d.householdId === householdId && d.id === deviceId);
+}
+
+/** PENDING BACKEND: a new invite code such as "SVR-4F7K" (no 0/O or 1/I, to read out easily). */
+export function newInviteCode(): string {
+  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const n = ++db.counter;
+  return `SVR-${Array.from({ length: 4 }, (_, i) => letters[(n * 7 + i * 13) % letters.length]).join('')}`;
 }

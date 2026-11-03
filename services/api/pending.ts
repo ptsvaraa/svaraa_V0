@@ -32,6 +32,21 @@ export type DeviceOut = { id: string; serial: string; claim_state: ClaimState; i
 export type ChallengeOut = { challenge: string };
 /** C3: the signed challenge, and the Bluetooth id of the pendant this phone paired with (the gateway). */
 export type ActivateIn = { signature: string; pendant_id: string };
+/** C5, C6 (and D3): an emergency contact. Needs no account; how they are alerted is decided by Svaraa. */
+export type ContactIn = {
+  name: string;
+  relationship?: string | null;
+  /** With the plus, e.g. "+91". */
+  country_code: string;
+  mobile_number: string;
+};
+/** The whole list, in alert order. Saving replaces the list. */
+export type ContactsIn = { contacts: ContactIn[] };
+export type ContactsOut = ContactsIn;
+/** C7: invite someone to help, as Admin (sees status, edits settings) or Viewer (sees alerts only). */
+export type InviteRole = 'admin' | 'viewer';
+export type InviteIn = { role: InviteRole };
+export type InviteOut = { code: string; url: string; role: InviteRole; expires_at: string };
 
 type Operation<In, Out, Status extends number> = {
   parameters: NoParams;
@@ -103,6 +118,14 @@ export type PendingPaths = {
   '/api/v1/households/{household_id}/claim': PathItem<
     HouseholdPath,
     { post: PathOperation<HouseholdPath, ClaimIn, DeviceOut> }
+  >;
+  '/api/v1/households/{household_id}/contacts': PathItem<
+    HouseholdPath,
+    { put: PathOperation<HouseholdPath, ContactsIn, ContactsOut> }
+  >;
+  '/api/v1/households/{household_id}/invites': PathItem<
+    HouseholdPath,
+    { post: PathOperation<HouseholdPath, InviteIn, InviteOut> }
   >;
   '/api/v1/households/{household_id}/devices/{device_id}/challenge': PathItem<
     DevicePath,

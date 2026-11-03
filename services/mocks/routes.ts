@@ -2,7 +2,10 @@ import type {
   ActivateIn,
   ClaimIn,
   ConsentIn,
+  ContactsIn,
   HouseholdCreateIn,
+  InviteIn,
+  InviteOut,
   PushTokenIn,
   WearerProfileIn,
 } from '@/services/api/pending';
@@ -13,6 +16,7 @@ import {
   createHouseholdFor,
   deviceOf,
   householdOf,
+  newInviteCode,
   findOrCreateUser,
   mobileTakenBy,
   openSession,
@@ -351,6 +355,50 @@ export const routes: MockRoute[] = [
       d.claim_state = 'verified';
       const { householdId: _h, ...out } = d;
       return { status: 200, body: out };
+    },
+  },
+  // PENDING BACKEND: C5 / D3, replace the emergency contacts (name and number only). Not in docs/openapi.json yet.
+  {
+    method: 'PUT',
+    path: `${API}/households/{household_id}/contacts`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      const list = (ctx.body as Partial<ContactsIn> | undefined)?.contacts;
+      if (!Array.isArray(list)) return fail(422, 'validation_error', 'Invalid request');
+      for (const c of list) {
+        const n = readNumber(c);
+        if ('error' in n) return n.error;
+        if (!c.name?.trim()) return fail(422, 'validation_error', 'Invalid request');
+      }
+      const contacts = list.map((c) => ({
+        name: c.name.trim(),
+        relationship: c.relationship?.trim() || null,
+        country_code: c.country_code,
+        mobile_number: c.mobile_number,
+      }));
+      setupOf(h.householdId).contacts = contacts;
+      return { status: 200, body: { contacts } satisfies ContactsIn };
+    },
+  },
+  // PENDING BACKEND: C7, invite someone to help. Expires in 24 hours. Not in docs/openapi.json yet.
+  {
+    method: 'POST',
+    path: `${API}/households/{household_id}/invites`,
+    respond: (ctx) => {
+      const h = inHousehold(ctx);
+      if ('error' in h) return h.error;
+      const role = (ctx.body as Partial<InviteIn> | undefined)?.role;
+      if (role !== 'admin' && role !== 'viewer') return fail(422, 'invite_role_invalid', 'Invalid role');
+      const code = newInviteCode();
+      const invite: InviteOut = {
+        code,
+        url: `https://svaraa.ai/i/${code}`,
+        role,
+        expires_at: new Date(Date.now() + 24 * 3600_000).toISOString(),
+      };
+      setupOf(h.householdId).invites = [invite];
+      return { status: 200, body: invite };
     },
   },
 ];
