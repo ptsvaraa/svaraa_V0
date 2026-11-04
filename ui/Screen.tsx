@@ -28,9 +28,9 @@ export function Screen({
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           flexGrow: 1,
-          padding: theme.space[5],
-          paddingTop: theme.space[5] + insets.top,
-          paddingBottom: theme.space[5] + (footer || !bottomInset ? 0 : insets.bottom),
+          padding: theme.space[4] + theme.space[1],
+          paddingTop: theme.space[4] + insets.top,
+          paddingBottom: theme.space[4] + (footer || !bottomInset ? 0 : insets.bottom),
           gap: theme.space[4],
           maxWidth: 520,
           width: '100%',
@@ -42,10 +42,10 @@ export function Screen({
       {footer ? (
         <View
           style={{
-            paddingHorizontal: theme.space[5],
+            paddingHorizontal: theme.space[4] + theme.space[1],
             paddingTop: theme.space[3],
             paddingBottom: theme.space[4] + (bottomInset ? insets.bottom : 0),
-            gap: theme.space[3],
+            gap: theme.space[2],
             maxWidth: 520,
             width: '100%',
             alignSelf: 'center',

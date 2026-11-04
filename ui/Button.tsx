@@ -44,8 +44,8 @@ export function Button({
       style={({ pressed }) => ({
         minHeight: Math.max(theme.buttonHeight[size], theme.minTarget),
         paddingHorizontal: theme.space[4],
-        borderRadius: theme.radius.lg,
-        borderWidth: 1.5,
+        borderRadius: theme.radius.md,
+        borderWidth: 1,
         borderColor: palette.border,
         backgroundColor: pressed ? palette.pressed : palette.bg,
         alignItems: 'center',
@@ -59,7 +59,7 @@ export function Button({
       {loading ? <ActivityIndicator color={palette.fg} /> : null}
       <View>
         <Text
-          variant={size === 'sm' ? 'bodySm' : 'body'}
+          variant={size === 'sm' ? 'bodySm' : 'label'}
           style={{ color: palette.fg, fontWeight: undefined }}
         >
           {label}

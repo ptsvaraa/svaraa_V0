@@ -15,9 +15,9 @@ export function ProductCard({ onPress }: { onPress: () => void }) {
   const theme = useTheme();
   const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
-  // Starting guess from the screen width (screen padding 2 x space[5]); replaced by the measured width.
+  // Starting guess from the screen width (screen padding 2 x 20); replaced by the measured width.
   const [measured, setMeasured] = useState(0);
-  const cardWidth = measured || Math.min(screenWidth, 520) - theme.space[5] * 2;
+  const cardWidth = measured || Math.min(screenWidth, 520) - (theme.space[4] + theme.space[1]) * 2;
   // Inside the 1 px border on each side.
   const photoWidth = Math.max(0, cardWidth - 2);
 

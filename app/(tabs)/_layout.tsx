@@ -21,7 +21,7 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: c.textSecondary,
         tabBarStyle: { backgroundColor: c.surfaceSolid, borderTopColor: c.border },
         tabBarItemStyle: { minHeight: theme.minTarget, justifyContent: 'center' },
-        tabBarLabelStyle: { fontSize: 14 * theme.fontScale, fontWeight: '600' },
+        tabBarLabelStyle: { fontSize: 11 * theme.fontScale, fontWeight: '500' },
       }}
     >
       <Tabs.Screen name="home" options={tab(t('tabs.home'))} />

@@ -71,6 +71,8 @@ Each has a strong colour and a `-tint` background. Use the pair together.
 | Caption    | `--type-caption` | Inter 400                             | 12 / 16     |
 | Kicker     | `--type-kicker`  | Inter 500, 0.32em tracking, uppercase | 12 / 16     |
 
+**App type scale (mobile, `ui/tokens.ts`).** The app uses one step smaller than the web sizes above, for a compact, professional look: display 32/40, title 1 26/32, title 2 21/28, heading 16/22, body large 16/24, body 15/22, body small 13/18, label 14/20, caption 12/16, kicker 11/14 (1.2 tracking). The wearer theme multiplies text by 1.1; button heights and tap targets stay the same in both themes.
+
 - `h1`–`h3` use Newsreader and `--text-heading` automatically.
 - One italic phrase in a heading takes the accent colour: `<h1>Care, in harmony. <em>Life, on their terms.</em></h1>`.
 - Small gold label above a heading: class `sv-kicker`.

@@ -17,7 +17,7 @@ export function Card({ children, style, ...rest }: ViewProps & { children: React
           borderRadius: theme.radius.xl,
           borderWidth: 1,
           borderColor: theme.colors.borderSubtle,
-          padding: theme.space[5],
+          padding: theme.space[4],
           gap: theme.space[3],
         },
         theme.scheme === 'light' ? shadow.card : null,

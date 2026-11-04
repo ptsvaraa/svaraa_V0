@@ -117,18 +117,21 @@ export type TypeStyle = {
   uppercase?: boolean;
 };
 
-/** Type scale, same as the web guide. */
+/**
+ * Type scale for the app. A step smaller than the web guide's marketing sizes, so screens read as a
+ * compact, professional app rather than a landing page (see docs/ui-guide, "App type scale").
+ */
 export const typeScale: Record<TypeVariant, TypeStyle> = {
-  display: { size: 44, line: 52, weight: '400', face: 'display' },
-  title1: { size: 34, line: 42, weight: '400', face: 'display' },
-  title2: { size: 26, line: 34, weight: '400', face: 'display' },
-  heading: { size: 18, line: 24, weight: '600', face: 'ui' },
-  bodyLg: { size: 18, line: 28, weight: '400', face: 'ui' },
-  body: { size: 16, line: 24, weight: '400', face: 'ui' },
-  bodySm: { size: 14, line: 20, weight: '400', face: 'ui' },
+  display: { size: 32, line: 40, weight: '400', face: 'display' },
+  title1: { size: 26, line: 32, weight: '400', face: 'display' },
+  title2: { size: 21, line: 28, weight: '400', face: 'display' },
+  heading: { size: 16, line: 22, weight: '600', face: 'ui' },
+  bodyLg: { size: 16, line: 24, weight: '400', face: 'ui' },
+  body: { size: 15, line: 22, weight: '400', face: 'ui' },
+  bodySm: { size: 13, line: 18, weight: '400', face: 'ui' },
   label: { size: 14, line: 20, weight: '500', face: 'ui' },
   caption: { size: 12, line: 16, weight: '400', face: 'ui' },
-  kicker: { size: 12, line: 16, weight: '500', face: 'ui', tracking: 3.8, uppercase: true },
+  kicker: { size: 11, line: 14, weight: '500', face: 'ui', tracking: 1.2, uppercase: true },
 };
 
 export const motion = { quick: 120, standard: 200, gentle: 320 } as const;
