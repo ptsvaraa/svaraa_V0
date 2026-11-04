@@ -2,7 +2,7 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import i18n from '@/i18n';
 import Intro from '@/app/intro';
 import { FlatList } from 'react-native';
-import { SLIDE_SETTLE_MS, STORIES } from '@/features/intro/stories';
+import { AUTO_ADVANCE_MS, SLIDE_SETTLE_MS, STORIES } from '@/features/intro/stories';
 import { useSession } from '@/services/auth/session';
 import { renderApp } from '@/test-utils/render';
 
@@ -19,62 +19,50 @@ beforeEach(async () => {
   useSession.setState({ showIntro: true });
 });
 
-describe('Intro (A3): the product story', () => {
-  it('only moves forward, every 2 seconds, and wraps from the 7th to the 1st without scrolling back', async () => {
+describe('Intro (A3): how setup works', () => {
+  it('only moves forward, every 2.5 seconds, and wraps from the last step to the first without scrolling back', async () => {
     jest.useFakeTimers();
     const scroll = jest.spyOn(FlatList.prototype, 'scrollToIndex');
     await renderApp(<Intro />);
-    expect(screen.getByLabelText('Page 1 of 7')).toBeTruthy();
-    for (let i = 2; i <= 7; i++) {
-      await act(async () => jest.advanceTimersByTime(2000));
-      expect(screen.getByLabelText(`Page ${i} of 7`)).toBeTruthy();
+    expect(screen.getByLabelText('Page 1 of 4')).toBeTruthy();
+    for (let i = 2; i <= 4; i++) {
+      await act(async () => jest.advanceTimersByTime(AUTO_ADVANCE_MS));
+      expect(screen.getByLabelText(`Page ${i} of 4`)).toBeTruthy();
     }
-    // 7th to 1st: slides forward onto a copy of the first story, then jumps to the real one.
-    await act(async () => jest.advanceTimersByTime(2000));
-    expect(screen.getByLabelText('Page 1 of 7')).toBeTruthy();
+    // last to first: slides forward onto a copy of the first step, then jumps to the real one.
+    await act(async () => jest.advanceTimersByTime(AUTO_ADVANCE_MS));
+    expect(screen.getByLabelText('Page 1 of 4')).toBeTruthy();
     await act(async () => jest.advanceTimersByTime(SLIDE_SETTLE_MS));
     expect(scroll.mock.calls.map(([o]) => [o.index, o.animated])).toEqual([
       [1, true],
       [2, true],
       [3, true],
       [4, true],
-      [5, true],
-      [6, true],
-      [7, true],
       [0, false],
     ]);
     // and it carries on forward from the first
-    await act(async () => jest.advanceTimersByTime(2000));
-    expect(screen.getByLabelText('Page 2 of 7')).toBeTruthy();
+    await act(async () => jest.advanceTimersByTime(AUTO_ADVANCE_MS));
+    expect(screen.getByLabelText('Page 2 of 4')).toBeTruthy();
     scroll.mockRestore();
     jest.useRealTimers();
   });
 
-  it('has the seven Svaraas from the marketing site, in order', () => {
-    expect(STORIES.map((s) => s.id)).toEqual([
-      'recite',
-      'respond',
-      'remind',
-      'rescue',
-      'recall',
-      'repository',
-      'riddle',
-    ]);
+  it('has the four setup steps, in order', () => {
+    expect(STORIES.map((s) => s.id)).toEqual(['claim', 'pair', 'contacts', 'drill']);
   });
 
-  it('shows each story with its photo, name and headline', async () => {
+  it('shows each step with its number, name and headline', async () => {
     await renderApp(<Intro />);
-    expect(screen.getByText('01 · Recite')).toBeTruthy();
-    expect(screen.getByText(/A little calm,/)).toBeTruthy();
-    expect(screen.getByText('Prayer, recitation and ambient sound, guided by voice.')).toBeTruthy();
-    expect(screen.getByLabelText(/meditating side by side/)).toBeTruthy();
-    expect(screen.getByText('07 · Riddle')).toBeTruthy();
+    expect(screen.getByText('01 · Claim')).toBeTruthy();
+    expect(screen.getByText('Scan the code in the box')).toBeTruthy();
+    expect(screen.getByText('Each pendant has a one-time code on the card inside its box.')).toBeTruthy();
+    expect(screen.getByText('04 · Test')).toBeTruthy();
   });
 
   it('is in Hindi when the language is Hindi', async () => {
     await i18n.changeLanguage('hi');
     await renderApp(<Intro />);
-    expect(screen.getByText(/थोड़ी शांति,/)).toBeTruthy();
+    expect(screen.getByText('बॉक्स का कोड स्कैन करें')).toBeTruthy();
   });
 
   it('I have a Svaraa ends the intro and starts setup', async () => {

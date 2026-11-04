@@ -1,24 +1,19 @@
-import type { ImageSourcePropType } from 'react-native';
-
 /**
- * The product story shown in the intro (A3): the seven Svaraas from the marketing site. Text is in i18n under `intro.story.<id>`;
- * `accent` marks stories whose headline has an italic second half.
+ * The intro (A3) for v0: how setting up Svaraa works, in four steps. Text is in i18n under `intro.story.<id>`.
+ * Each slide shows a numbered placeholder card until real illustrations are made (see docs/open-items.md).
  */
-export const STORIES: { id: string; image: ImageSourcePropType; accent: boolean }[] = [
-  { id: 'recite', image: require('../../assets/story/recite.webp'), accent: true },
-  { id: 'respond', image: require('../../assets/story/respond.webp'), accent: true },
-  { id: 'remind', image: require('../../assets/story/remind.webp'), accent: true },
-  { id: 'rescue', image: require('../../assets/story/rescue.webp'), accent: false },
-  { id: 'recall', image: require('../../assets/story/recall.webp'), accent: false },
-  { id: 'repository', image: require('../../assets/story/repo.webp'), accent: true },
-  { id: 'riddle', image: require('../../assets/story/riddle.webp'), accent: true },
+export const STORIES: { id: string }[] = [
+  { id: 'claim' },
+  { id: 'pair' },
+  { id: 'contacts' },
+  { id: 'drill' },
 ];
 
-/** Photos are 800 x 600. */
-export const STORY_IMAGE_RATIO = 800 / 600;
+/** Width / height of the placeholder card. */
+export const STORY_IMAGE_RATIO = 4 / 3;
 
-/** The story moves on by itself every 2 seconds. */
-export const AUTO_ADVANCE_MS = 2000;
+/** The story moves on by itself every 2.5 seconds. */
+export const AUTO_ADVANCE_MS = 2500;
 
 /** Time to let the slide onto the repeated first story finish before jumping back to the real one. */
 export const SLIDE_SETTLE_MS = 450;

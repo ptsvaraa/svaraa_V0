@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, FlatList, Image, View, useWindowDimensions } from 'react-native';
+import { AccessibilityInfo, FlatList, View, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { AUTO_ADVANCE_MS, SLIDE_SETTLE_MS, STORIES, STORY_IMAGE_RATIO } from '@/features/intro/stories';
@@ -10,7 +10,7 @@ import { Button, Screen, Text, useTheme } from '@/ui';
 const LOOP = [...STORIES, STORIES[0]];
 
 /**
- * A3 · Intro: swipe through the product story (the seven Svaraas, from the marketing site).
+ * A3 · Intro: swipe through how setup works, in four steps (claim, pair, contacts, SOS test).
  * Shown once after a new account is created. Every way out ends the intro.
  */
 export default function Intro() {
@@ -20,10 +20,10 @@ export default function Intro() {
   const { width } = useWindowDimensions();
   // The width really available, measured on the phone. (The sum below is only the starting guess.)
   const [measured, setMeasured] = useState(0);
-  const pageWidth = measured || Math.min(width, 520) - theme.space[5] * 2;
-  // Photos are a little narrower than the page and centred, so they sit in the middle of the screen.
+  const pageWidth = measured || Math.min(width, 520) - (theme.space[4] + theme.space[1]) * 2;
+  // The step card is a little narrower than the page and centred.
   const imageWidth = Math.min(Math.round(pageWidth * 0.86), 340);
-  // 0 to 6 are the seven stories; 7 is a copy of the first, placed after the last so the loop only ever moves forward.
+  // 0 to 3 are the four steps; 4 is a copy of the first, placed after the last so the loop only ever moves forward.
   const [index, setIndex] = useState(0);
   const page = index % STORIES.length;
   const list = useRef<FlatList>(null);
@@ -34,9 +34,9 @@ export default function Intro() {
     void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
   }, []);
 
-  // Always moves forward, every 2 s. After the last story it slides on to the copy of the first, then jumps back
+  // Always moves forward, every 2.5 s. After the last story it slides on to the copy of the first, then jumps back
   // to the real first without animation (the two look the same), so it never scrolls backwards through the others.
-  // Waits while a finger is on it, and starts a fresh 2 s after any swipe. Off when the phone asks for reduced motion.
+  // Waits while a finger is on it, and starts a fresh 2.5 s after any swipe. Off when the phone asks for reduced motion.
   useEffect(() => {
     if (touching) return;
     if (index === STORIES.length) {
@@ -84,7 +84,7 @@ export default function Intro() {
         </>
       }
     >
-      {/* flexShrink 0: a horizontal list shrinks by default on a phone, which cut the bottom off the photos. */}
+      {/* flexShrink 0: a horizontal list shrinks by default on a phone, which cut the bottom off the cards. */}
       <View
         onLayout={(e) => setMeasured(Math.floor(e.nativeEvent.layout.width))}
         style={{ flexGrow: 1, flexShrink: 0, justifyContent: 'center', gap: theme.space[4] }}
@@ -116,19 +116,26 @@ export default function Intro() {
                 accessibilityElementsHidden={isCopy}
                 importantForAccessibility={isCopy ? 'no-hide-descendants' : 'auto'}
               >
-                <Image
-                  source={item.image}
-                  accessibilityRole="image"
-                  accessibilityLabel={t(`${key}.alt`)}
-                  resizeMode="cover"
+                {/* Placeholder until real illustrations exist: a quiet card with the step number. */}
+                <View
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
                   style={{
                     width: imageWidth,
                     height: imageWidth / STORY_IMAGE_RATIO,
                     flexShrink: 0,
-                    borderRadius: theme.radius.xl,
+                    borderRadius: theme.radius.lg,
                     backgroundColor: theme.colors.sunken,
+                    borderWidth: 1,
+                    borderColor: theme.colors.borderSubtle,
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
-                />
+                >
+                  <Text variant="display" tone="heading">
+                    {String((at % STORIES.length) + 1).padStart(2, '0')}
+                  </Text>
+                </View>
                 <View
                   accessible
                   accessibilityRole="header"
@@ -139,11 +146,6 @@ export default function Intro() {
                   </Text>
                   <Text variant="title2" tone="heading" style={{ textAlign: 'center' }}>
                     {t(`${key}.lead`)}
-                    {item.accent ? (
-                      <Text variant="title2" tone="accent" italic>
-                        {t(`${key}.accent`)}
-                      </Text>
-                    ) : null}
                   </Text>
                 </View>
                 <Text tone="secondary" style={{ textAlign: 'center' }}>
@@ -162,9 +164,9 @@ export default function Intro() {
             <View
               key={story.id}
               style={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
+                width: i === page ? 18 : 6,
+                height: 6,
+                borderRadius: 3,
                 backgroundColor: i === page ? theme.colors.action : theme.colors.border,
               }}
             />

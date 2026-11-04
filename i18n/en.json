@@ -160,52 +160,25 @@
     "explore": "Explore the product",
     "skip": "Skip for now",
     "story": {
-      "recite": {
-        "label": "Recite",
-        "lead": "A little calm, ",
-        "sub": "Prayer, recitation and ambient sound, guided by voice.",
-        "alt": "An older couple meditating side by side on floor cushions at home, each wearing a Svaraa pendant.",
-        "accent": "on cue."
+      "claim": {
+        "label": "Claim",
+        "lead": "Scan the code in the box",
+        "sub": "Each pendant has a one-time code on the card inside its box."
       },
-      "respond": {
-        "label": "Respond",
-        "lead": "A familiar voice. ",
-        "sub": "Natural conversations that turn everyday requests into thoughtful support.",
-        "alt": "An older couple chatting during a walk through a leafy park, the woman touching her Svaraa pendant.",
-        "accent": "A helpful response."
+      "pair": {
+        "label": "Pair",
+        "lead": "Pair it with your phone",
+        "sub": "Press the gold dot and connect over Bluetooth in under a minute."
       },
-      "remind": {
-        "label": "Remind",
-        "lead": "Gentle reminders. ",
-        "sub": "Medicine, water and daily routines, without another screen to manage.",
-        "alt": "An older couple at the breakfast table taking their medicine with glasses of water, a pill organiser beside them.",
-        "accent": "Everyday reassurance."
+      "contacts": {
+        "label": "Contacts",
+        "lead": "Add emergency contacts",
+        "sub": "Choose who Svaraa alerts, and in what order. They don’t need the app."
       },
-      "rescue": {
-        "label": "Rescue",
-        "lead": "Help, brought closer.",
-        "sub": "An SOS connects the wearer to their trusted circle of care.",
-        "alt": "A woman kneels beside an older woman seated on a bathroom floor after a fall, reassuring her."
-      },
-      "recall": {
-        "label": "Recall",
-        "lead": "A little clarity for the day ahead.",
-        "sub": "A calm news briefing, today’s plans and helpful follow-through.",
-        "alt": "An older couple smiling over a notebook of plans at the breakfast table, a newspaper beside them."
-      },
-      "repository": {
-        "label": "Repository",
-        "lead": "Keep the moments ",
-        "sub": "Conversation notes and personal stories, organised with permission.",
-        "alt": "An older couple share old photographs and stories with their daughter around the dining table.",
-        "accent": "that matter."
-      },
-      "riddle": {
-        "label": "Riddle",
-        "lead": "A little movement. ",
-        "sub": "Gentle yoga and cognitive play, at a comfortable pace.",
-        "alt": "An older man does a seated arm stretch while an older woman works on a colourful tangram puzzle.",
-        "accent": "A little wonder."
+      "drill": {
+        "label": "Test",
+        "lead": "Run a quick SOS test",
+        "sub": "Make sure alerts reach your contacts before you rely on it."
       }
     }
   },
